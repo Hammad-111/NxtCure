@@ -175,16 +175,16 @@ export default function TrackScreen() {
 
                 {/* Lifestyle Vitals Section */}
                 <Animated.View entering={FadeInDown.delay(100).duration(800)} className="mb-10">
-                    <Text className="text-white/40 text-[9px] font-black uppercase tracking-[4px] ml-2 mb-4">Lifestyle Vitals</Text>
+                    <Text className="text-white/60 text-[10px] font-black uppercase tracking-[4px] ml-2 mb-4">Lifestyle Vitals</Text>
 
                     <View className="flex-row flex-wrap gap-3">
                         <Pressable
                             onPress={() => toggleHabit(today, 'smokingFree')}
                             style={[styles.glassCard, !currentLifestyle.smokingFree && styles.penaltyCard]}
-                            className="flex-1 min-w-[45%] p-4 items-center active:opacity-80"
+                            className="flex-1 min-w-[45%] p-5 items-center active:opacity-80"
                         >
-                            <CigaretteOff size={22} color={currentLifestyle.smokingFree ? '#1DD1A1' : '#FF4757'} />
-                            <Text className={`text-[8px] font-black mt-2 uppercase tracking-widest text-center ${currentLifestyle.smokingFree ? 'text-white/60' : 'text-red-400'}`}>
+                            <CigaretteOff size={24} color={currentLifestyle.smokingFree ? '#1DD1A1' : '#FF4757'} />
+                            <Text className={`text-[10px] font-black mt-3 uppercase tracking-widest text-center ${currentLifestyle.smokingFree ? 'text-white/80' : 'text-red-400'}`}>
                                 {currentLifestyle.smokingFree ? 'Smoke Free' : 'Smoking'}
                             </Text>
                         </Pressable>
@@ -192,10 +192,10 @@ export default function TrackScreen() {
                         <Pressable
                             onPress={() => toggleHabit(today, 'alcoholFree')}
                             style={[styles.glassCard, !currentLifestyle.alcoholFree && styles.penaltyCard]}
-                            className="flex-1 min-w-[45%] p-4 items-center active:opacity-80"
+                            className="flex-1 min-w-[45%] p-5 items-center active:opacity-80"
                         >
-                            <WineOff size={22} color={currentLifestyle.alcoholFree ? '#1DD1A1' : '#FF4757'} />
-                            <Text className={`text-[8px] font-black mt-2 uppercase tracking-widest text-center ${currentLifestyle.alcoholFree ? 'text-white/60' : 'text-red-400'}`}>
+                            <WineOff size={24} color={currentLifestyle.alcoholFree ? '#1DD1A1' : '#FF4757'} />
+                            <Text className={`text-[10px] font-black mt-3 uppercase tracking-widest text-center ${currentLifestyle.alcoholFree ? 'text-white/80' : 'text-red-400'}`}>
                                 {currentLifestyle.alcoholFree ? 'Alcohol Free' : 'Drinking'}
                             </Text>
                         </Pressable>
@@ -203,10 +203,10 @@ export default function TrackScreen() {
                         <Pressable
                             onPress={() => toggleHabit(today, 'sunScreenApplied')}
                             style={[styles.glassCard, currentLifestyle.sunScreenApplied && styles.activeCard]}
-                            className="flex-1 min-w-[45%] p-4 items-center active:opacity-80"
+                            className="flex-1 min-w-[45%] p-5 items-center active:opacity-80"
                         >
-                            <Sun size={22} color={currentLifestyle.sunScreenApplied ? '#1DD1A1' : 'rgba(255,255,255,0.3)'} />
-                            <Text className={`text-[8px] font-black mt-2 uppercase tracking-widest text-center ${currentLifestyle.sunScreenApplied ? 'text-nxtcure-primary' : 'text-white/40'}`}>
+                            <Sun size={24} color={currentLifestyle.sunScreenApplied ? '#1DD1A1' : 'rgba(255,255,255,0.4)'} />
+                            <Text className={`text-[10px] font-black mt-3 uppercase tracking-widest text-center ${currentLifestyle.sunScreenApplied ? 'text-nxtcure-primary' : 'text-white/60'}`}>
                                 SPF Shield
                             </Text>
                         </Pressable>
@@ -214,10 +214,10 @@ export default function TrackScreen() {
                         <Pressable
                             onPress={() => toggleHabit(today, 'carcinogenAwareness')}
                             style={[styles.glassCard, currentLifestyle.carcinogenAwareness && styles.activeCard]}
-                            className="flex-1 min-w-[45%] p-4 items-center active:opacity-80"
+                            className="flex-1 min-w-[45%] p-5 items-center active:opacity-80"
                         >
-                            <ShieldCheck size={22} color={currentLifestyle.carcinogenAwareness ? '#1DD1A1' : 'rgba(255,255,255,0.3)'} />
-                            <Text className={`text-[8px] font-black mt-2 uppercase tracking-widest text-center ${currentLifestyle.carcinogenAwareness ? 'text-nxtcure-primary' : 'text-white/40'}`}>
+                            <ShieldCheck size={24} color={currentLifestyle.carcinogenAwareness ? '#1DD1A1' : 'rgba(255,255,255,0.4)'} />
+                            <Text className={`text-[10px] font-black mt-3 uppercase tracking-widest text-center ${currentLifestyle.carcinogenAwareness ? 'text-nxtcure-primary' : 'text-white/60'}`}>
                                 IARC Aware
                             </Text>
                         </Pressable>
@@ -225,17 +225,17 @@ export default function TrackScreen() {
                         <Pressable
                             onPress={() => setExercise(today, currentLifestyle.exerciseMinutes >= 30 ? 0 : 30)}
                             style={[styles.glassCard, currentLifestyle.exerciseMinutes >= 30 && styles.activeCard]}
-                            className="w-full p-5 flex-row items-center border-white/10 active:opacity-80"
+                            className="w-full p-6 flex-row items-center border-white/10 active:opacity-80"
                         >
-                            <View className={`w-12 h-12 rounded-2xl items-center justify-center ${currentLifestyle.exerciseMinutes >= 30 ? 'bg-nxtcure-primary/10' : 'bg-white/5'}`}>
-                                <ExerciseIcon size={24} color={currentLifestyle.exerciseMinutes >= 30 ? '#1DD1A1' : 'rgba(255,255,255,0.3)'} />
+                            <View className={`w-14 h-14 rounded-2xl items-center justify-center ${currentLifestyle.exerciseMinutes >= 30 ? 'bg-nxtcure-primary/10' : 'bg-white/5'}`}>
+                                <ExerciseIcon size={26} color={currentLifestyle.exerciseMinutes >= 30 ? '#1DD1A1' : 'rgba(255,255,255,0.4)'} />
                             </View>
-                            <View className="ml-4 flex-1">
-                                <Text className="text-white font-bold text-base">30m+ Physical Activity</Text>
-                                <Text className="text-white/40 text-[9px] font-black uppercase tracking-widest">Metabolic Optimization</Text>
+                            <View className="ml-5 flex-1">
+                                <Text className="text-white font-bold text-lg">30m+ Physical Activity</Text>
+                                <Text className="text-white/60 text-[10px] font-black uppercase tracking-widest mt-1">Metabolic Optimization</Text>
                             </View>
-                            <View className={`w-6 h-6 rounded-full border ${currentLifestyle.exerciseMinutes >= 30 ? 'bg-nxtcure-primary border-nxtcure-primary' : 'border-white/20'} items-center justify-center`}>
-                                {currentLifestyle.exerciseMinutes >= 30 && <Check size={14} color="white" strokeWidth={3} />}
+                            <View className={`w-7 h-7 rounded-full border ${currentLifestyle.exerciseMinutes >= 30 ? 'bg-nxtcure-primary border-nxtcure-primary' : 'border-white/20'} items-center justify-center`}>
+                                {currentLifestyle.exerciseMinutes >= 30 && <Check size={16} color="white" strokeWidth={3} />}
                             </View>
                         </Pressable>
                     </View>
@@ -244,8 +244,8 @@ export default function TrackScreen() {
                 {/* Mediterranean Synthesis Section */}
                 <Animated.View entering={FadeInDown.delay(300).duration(800)}>
                     <View className="flex-row items-center justify-between mb-4 px-2">
-                        <Text className="text-white/40 text-[9px] font-black uppercase tracking-[4px]">Mediterranean Synthesis</Text>
-                        <Text className="text-nxtcure-primary text-[10px] font-black tracking-widest">{dietScore}/10 Protocol</Text>
+                        <Text className="text-white/60 text-[10px] font-black uppercase tracking-[4px]">Mediterranean Synthesis</Text>
+                        <Text className="text-nxtcure-primary text-[11px] font-black tracking-widest">{dietScore}/10 Protocol</Text>
                     </View>
 
                     <View className="gap-3">
@@ -256,19 +256,19 @@ export default function TrackScreen() {
                                     key={item.id}
                                     onPress={() => toggleItem(today, item.id as keyof DailyLog)}
                                     style={[styles.glassCard, isSelected && (item.penalty ? styles.penaltyCard : styles.activeCard)]}
-                                    className="p-4 flex-row items-center active:opacity-80"
+                                    className="p-5 flex-row items-center active:opacity-80"
                                 >
-                                    <View className="w-11 h-11 rounded-2xl bg-white/5 items-center justify-center mr-4 border border-white/10">
-                                        <Text className="text-2xl">{item.icon}</Text>
+                                    <View className="w-12 h-12 rounded-2xl bg-white/5 items-center justify-center mr-5 border border-white/10">
+                                        <Text className="text-3xl">{item.icon}</Text>
                                     </View>
                                     <View className="flex-1">
-                                        <Text className={`text-[7px] font-black uppercase tracking-[2px] mb-0.5 ${item.penalty ? 'text-red-400/50' : 'text-white/30'}`}>
+                                        <Text className={`text-[8px] font-black uppercase tracking-[2px] mb-1 ${item.penalty ? 'text-red-400/80' : 'text-white/50'}`}>
                                             {item.penalty ? 'Avoidance Protocol' : 'Nutritional Pillar'}
                                         </Text>
-                                        <Text className="text-white text-base font-bold leading-tight">{item.label}</Text>
+                                        <Text className="text-white text-lg font-bold leading-tight">{item.label}</Text>
                                     </View>
-                                    <View className={`w-7 h-7 rounded-full items-center justify-center border ${isSelected ? (item.penalty ? 'bg-red-500 border-red-400' : 'bg-nxtcure-primary border-nxtcure-primary/50') : 'border-white/20'}`}>
-                                        {isSelected && <Check size={16} color="white" strokeWidth={3} />}
+                                    <View className={`w-8 h-8 rounded-full items-center justify-center border ${isSelected ? (item.penalty ? 'bg-red-500 border-red-400' : 'bg-nxtcure-primary border-nxtcure-primary/50') : 'border-white/20'}`}>
+                                        {isSelected && <Check size={18} color="white" strokeWidth={3} />}
                                     </View>
                                 </Pressable>
                             );

@@ -6,7 +6,7 @@ import { Card } from '../../src/components/ui/Card';
 import { useScreeningStore, ScreeningType } from '../../src/store/screeningStore';
 import { useRiskStore } from '../../src/store/riskStore';
 import { useAppointmentStore, Appointment } from '../../src/store/appointmentStore';
-import { useRouter } from 'expo-router';
+import { useRouter, Link } from 'expo-router';
 import { LinearGradient } from 'expo-linear-gradient';
 import Animated, { FadeInDown } from 'react-native-reanimated';
 import { Logo } from '../../src/components/ui/Logo';
@@ -105,49 +105,51 @@ export default function RemindersScreen() {
             <ScrollView className="flex-1 px-8" showsVerticalScrollIndicator={false} contentContainerStyle={{ paddingBottom: 150 }}>
                 {/* Appointments Section */}
                 <Animated.View entering={FadeInDown.duration(800)} className="mb-10">
-                    <Text className="text-white/40 text-[9px] font-black uppercase tracking-[4px] ml-2 mb-4">Upcoming Appointments</Text>
+                    <Text className="text-white/60 text-[10px] font-black uppercase tracking-[4px] ml-2 mb-4">Upcoming Appointments</Text>
                     {appointments.length > 0 ? appointments.map((app) => (
-                        <Card key={app.id} className="mb-3 bg-white/5 border-white/10 p-5 flex-row items-center">
-                            <View className="w-11 h-11 bg-nxtcure-info/10 rounded-2xl items-center justify-center mr-4">
-                                <MapPin size={22} color="#45AAF2" />
+                        <Card key={app.id} className="mb-4 bg-white/5 border-white/10 p-6 flex-row items-center">
+                            <View className="w-12 h-12 bg-nxtcure-info/10 rounded-2xl items-center justify-center mr-5">
+                                <MapPin size={26} color="#45AAF2" />
                             </View>
                             <View className="flex-1">
-                                <Text className="text-white font-bold text-base">{app.title}</Text>
+                                <Text className="text-white font-black text-lg mb-1">{app.title}</Text>
                                 <View className="flex-row items-center mt-1">
-                                    <User size={10} color="rgba(255,255,255,0.3)" />
-                                    <Text className="text-white/30 text-[9px] font-bold ml-1 uppercase">{app.doctor}</Text>
+                                    <User size={12} color="rgba(255,255,255,0.5)" />
+                                    <Text className="text-white/50 text-[10px] font-bold ml-1 uppercase">{app.doctor}</Text>
                                     <View className="w-1 h-1 bg-white/10 rounded-full mx-2" />
-                                    <Clock size={10} color="rgba(255,255,255,0.3)" />
-                                    <Text className="text-white/30 text-[9px] font-bold ml-1 uppercase">{new Date(app.date).toLocaleDateString()}</Text>
+                                    <Clock size={12} color="rgba(255,255,255,0.5)" />
+                                    <Text className="text-white/50 text-[10px] font-bold ml-1 uppercase">{new Date(app.date).toLocaleDateString()}</Text>
                                 </View>
                             </View>
-                            <Pressable onPress={() => removeAppointment(app.id)} className="p-2">
-                                <Trash2 size={18} color="#FF4757" opacity={0.4} />
+                            <Pressable onPress={() => removeAppointment(app.id)} className="p-3 bg-red-500/10 rounded-xl">
+                                <Trash2 size={20} color="#FF4757" opacity={0.8} />
                             </Pressable>
                         </Card>
                     )) : (
                         <View className="bg-white/5 border border-dashed border-white/10 p-8 rounded-[32px] items-center">
-                            <Text className="text-white/20 text-xs font-bold uppercase tracking-widest">No Active Bookings</Text>
+                            <Text className="text-white/30 text-xs font-bold uppercase tracking-widest">No Active Bookings</Text>
                         </View>
                     )}
                 </Animated.View>
 
                 {/* Screenings Section */}
                 <Animated.View entering={FadeInDown.duration(800).delay(200)} className="mb-10">
-                    <Text className="text-white/40 text-[9px] font-black uppercase tracking-[4px] ml-2 mb-4">Protocol Schedule</Text>
+                    <Text className="text-white/60 text-[10px] font-black uppercase tracking-[4px] ml-2 mb-4">Protocol Schedule</Text>
                     {screeningItems.map(item => (
-                        <Card key={item.id} className={`mb-3 bg-white/5 border-white/10 p-5 flex-row items-center ${item.urgent ? 'border-l-4 border-l-red-500' : ''}`}>
-                            <View className={`w-11 h-11 rounded-2xl items-center justify-center mr-4 ${item.urgent ? 'bg-red-500/10' : 'bg-white/5'}`}>
-                                <item.icon size={22} color={item.urgent ? '#FF4757' : 'rgba(255,255,255,0.4)'} />
+                        <Card key={item.id} className={`mb-4 bg-white/5 border-white/10 p-6 flex-row items-center ${item.urgent ? 'border-l-4 border-l-red-500 bg-red-500/5' : ''}`}>
+                            <View className={`w-12 h-12 rounded-2xl items-center justify-center mr-5 ${item.urgent ? 'bg-red-500/10' : 'bg-white/5'}`}>
+                                <item.icon size={24} color={item.urgent ? '#FF4757' : 'rgba(255,255,255,0.5)'} />
                             </View>
                             <View className="flex-1">
-                                <Text className="text-white font-bold text-base">{item.title}</Text>
-                                <Text className={`${item.urgent ? 'text-red-400' : 'text-white/30'} text-[10px] font-black uppercase tracking-widest`}>{item.status}</Text>
+                                <Text className="text-white font-black text-lg mb-0.5">{item.title}</Text>
+                                <Text className={`${item.urgent ? 'text-red-400 font-black' : 'text-white/40 font-bold'} text-[10px] uppercase tracking-widest`}>{item.status}</Text>
                             </View>
                             {item.urgent && (
-                                <Pressable onPress={() => router.push(item.route as any)} className="bg-red-500/20 px-4 py-2 rounded-xl border border-red-500/30">
-                                    <Text className="text-red-400 font-black text-[10px] uppercase tracking-tighter">Action</Text>
-                                </Pressable>
+                                <Link href={item.route as any} asChild>
+                                    <Pressable className="bg-red-500 px-5 py-2.5 rounded-xl shadow-lg shadow-red-500/20">
+                                        <Text className="text-white font-black text-[11px] uppercase tracking-wider">Log Now</Text>
+                                    </Pressable>
+                                </Link>
                             )}
                         </Card>
                     ))}
