@@ -5,6 +5,7 @@ import { Button } from '../src/components/ui/Button';
 import { Shield, Search, Heart, Activity, CheckCircle2 } from 'lucide-react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import Animated, { FadeInDown, FadeInUp } from 'react-native-reanimated';
+import { Logo } from '../src/components/ui/Logo';
 
 const { width, height } = Dimensions.get('window');
 
@@ -34,7 +35,7 @@ export default function WelcomeScreen() {
                     className="px-8 pb-10"
                 >
                     <View className="flex-row items-center mb-6">
-                        <View className="w-12 h-1.5 bg-nxtcure-primary rounded-full mr-4 shadow-sm" />
+                        <Logo size={40} style={{ marginRight: 16 }} />
                         <Text style={styles.brandingText} className="text-sm font-black text-white tracking-[6px] uppercase opacity-90">NxtCure</Text>
                     </View>
 
@@ -106,7 +107,7 @@ const styles = StyleSheet.create({
         top: 0,
         left: 0,
         right: 0,
-        height: height, // Full screen height for background
+        height: height,
         zIndex: -1,
     },
     heroImage: {

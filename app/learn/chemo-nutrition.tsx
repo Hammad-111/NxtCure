@@ -7,6 +7,18 @@ import { Card } from '../../src/components/ui/Card';
 
 const GUIDE_SECTIONS = [
     {
+        title: 'Neutropenic Protocol',
+        items: ['Fully cooked meats & eggs', 'Pasteurized dairy', 'Thick-skinned fruit (bananas, oranges)', 'Bottled or filtered water'],
+        avoid: ['Raw fish (Sushi)', 'Soft cheeses (Brie/Blue)', 'Unwashed raw produce', 'Tap water in unknown areas'],
+        icon: '🛡️'
+    },
+    {
+        title: 'Muscle Synthesis',
+        items: ['Whey or Soy protein shakes', 'Greek yogurt', 'Chicken or Tofu', 'Lean beans/lentils'],
+        avoid: ['Sugar-only snacks', 'Long fasts', 'Alcohol-based tonics'],
+        icon: '💪'
+    },
+    {
         title: 'For Nausea',
         items: ['Ginger tea', 'Dry toast or crackers', 'Bland carbs (rice, pasta)', 'Cold foods (less aroma)'],
         avoid: ['Spicy foods', 'Greasy/Fried foods', 'Strong smelling foods'],

@@ -23,9 +23,25 @@ const SIDE_EFFECTS = [
         color: '#f59e0b'
     },
     {
+        id: 'neuropathy',
+        title: 'Peripheral Neuropathy',
+        threshold: 'New numbness or tingling in hands/feet',
+        action: 'Report at next visit for dose adjustment',
+        icon: Activity,
+        color: '#7158E2'
+    },
+    {
+        id: 'diarrhea',
+        title: 'Uncontrolled Diarrhea',
+        threshold: '4-6 stools/day over baseline or dizziness',
+        action: 'Call Oncology Nurse & Hydrate',
+        icon: Droplets,
+        color: '#FF4757'
+    },
+    {
         id: 'fatigue',
         title: 'Extreme Fatigue',
-        threshold: 'Unable to get out of bed',
+        threshold: 'Unable to get out of bed for basic needs',
         action: 'Monitor and report at next visit',
         icon: Activity,
         color: '#45aaf2'

@@ -9,6 +9,7 @@ import { useDietStore } from '../../src/store/dietStore';
 import { useLifestyleStore } from '../../src/store/lifestyleStore';
 import { useRiskStore } from '../../src/store/riskStore';
 import Svg, { Circle, Defs, LinearGradient as SvgGradient, Stop } from 'react-native-svg';
+import { Logo } from '../../src/components/ui/Logo';
 
 const { width, height } = Dimensions.get('window');
 const AnimatedCircle = Animated.createAnimatedComponent(Circle);
@@ -115,21 +116,23 @@ export default function HomeScreen() {
                     resizeMode="cover"
                 />
                 <LinearGradient
-                    colors={['rgba(0,0,0,0.8)', 'rgba(5, 53, 61, 0.4)', 'rgba(5, 53, 61, 0.95)', '#05353D']}
+                    colors={['rgba(0,0,0,0.85)', 'rgba(5, 53, 61, 0.4)', 'rgba(0, 0, 0, 0.8)', 'black']}
                     style={StyleSheet.absoluteFill}
-                    locations={[0, 0.2, 0.4, 0.95]}
+                    locations={[0, 0.2, 0.5, 0.95]}
                 />
             </View>
 
             <ScrollView contentContainerStyle={{ paddingBottom: 150 }} showsVerticalScrollIndicator={false}>
                 {/* Premium Header - More Compact */}
-                <Animated.View entering={FadeInDown.duration(1000)} className="px-8 pt-4 pb-6 flex-row items-center justify-between">
+                <Animated.View entering={FadeInDown.duration(1000)} className="px-8 pt-8 pb-6 flex-row items-center justify-between">
                     <View>
-                        <View className="flex-row items-center mb-0.5">
-                            <Fingerprint size={12} color="#1DD1A1" opacity={0.8} />
-                            <Text className="text-white/40 text-[8px] font-black uppercase tracking-[2px] ml-1.5">Human Protocol Identity</Text>
+                        <View className="flex-row items-center mb-1">
+                            <Logo size={24} style={{ marginRight: 8 }} />
+                            <View>
+                                <Text className="text-white/40 text-[8px] font-black uppercase tracking-[2px]">Oncological Core</Text>
+                                <Text className="text-white text-3xl font-black tracking-tighter">Alessandro</Text>
+                            </View>
                         </View>
-                        <Text className="text-white text-3xl font-black tracking-tighter">Alessandro</Text>
                         <Text className="text-white/60 text-[10px] font-bold">NXT-ID: 7492-BX-09</Text>
                     </View>
                     <Pressable onPress={() => router.push('/profile')} className="w-12 h-12 bg-white/10 rounded-2xl border border-white/20 items-center justify-center backdrop-blur-2xl">
@@ -216,7 +219,7 @@ const styles = StyleSheet.create({
         top: 0,
         left: 0,
         right: 0,
-        height: height * 0.55,
+        height: height,
         zIndex: -1,
     },
     heroImage: {

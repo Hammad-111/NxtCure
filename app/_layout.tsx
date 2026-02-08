@@ -4,11 +4,13 @@ import { StatusBar } from "expo-status-bar";
 import { useEffect, useState } from "react";
 import { View } from "react-native";
 import { MedicalDisclaimerModal } from "../src/components/MedicalDisclaimerModal";
+import { SplashScreen } from "../src/components/ui/SplashScreen";
 import { getSecure, saveSecure, KEYS } from "../src/services/storage";
 
 export default function Layout() {
     const [showDisclaimer, setShowDisclaimer] = useState(false);
     const [isReady, setIsReady] = useState(false);
+    const [showSplash, setShowSplash] = useState(true);
 
     useEffect(() => {
         checkDisclaimer();
@@ -33,23 +35,28 @@ export default function Layout() {
     }
 
     if (!isReady) {
-        return <View className="flex-1 bg-white" />;
+        return <View className="flex-1 bg-black" />;
     }
 
     return (
         <>
-            <StatusBar style="dark" />
+            <StatusBar style="light" />
             <Stack screenOptions={{
-                headerStyle: { backgroundColor: '#fff' },
-                headerTintColor: '#000',
-                contentStyle: { backgroundColor: '#fff' },
+                headerStyle: { backgroundColor: '#1A1A2E' },
+                headerTintColor: '#fff',
+                contentStyle: { backgroundColor: '#000' },
             }}>
                 <Stack.Screen name="index" options={{ headerShown: false }} />
                 <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
                 <Stack.Screen name="onboarding/goals" options={{ headerShown: false }} />
                 <Stack.Screen name="privacy" options={{ title: 'Privacy Policy', presentation: 'modal' }} />
             </Stack>
-            <MedicalDisclaimerModal visible={showDisclaimer} onAccept={handleAccept} />
+
+            <MedicalDisclaimerModal visible={showDisclaimer && !showSplash} onAccept={handleAccept} />
+
+            {showSplash && (
+                <SplashScreen onFinish={() => setShowSplash(false)} />
+            )}
         </>
     );
 }

@@ -7,6 +7,7 @@ import { ChevronLeft, Check, Shield, Activity, Heart, Search, UserPlus } from 'l
 import { LinearGradient } from 'expo-linear-gradient';
 import Animated, { FadeInDown, FadeInUp, useAnimatedStyle, withSpring, useDerivedValue } from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { Logo } from '../../src/components/ui/Logo';
 
 const { width, height } = Dimensions.get('window');
 
@@ -100,8 +101,8 @@ export default function GoalsScreen() {
                         <ChevronLeft size={24} color="white" />
                     </TouchableOpacity>
                     <View className="flex-row items-center bg-white/10 px-3 py-2.5 rounded-xl border border-white/20">
-                        <Activity size={12} color="#1DD1A1" />
-                        <Text className="text-white/80 text-[10px] font-black ml-2 uppercase tracking-[2px]">Goal Tracking</Text>
+                        <Logo size={12} style={{ marginRight: 8 }} />
+                        <Text className="text-white/80 text-[10px] font-black uppercase tracking-[2px]">Goal Tracking</Text>
                     </View>
                 </View>
 
