@@ -94,10 +94,26 @@ function HealthGauge({
     );
 }
 
-// ... ProtocolCard remains same ...
+function ProtocolCard({ title, subtitle, icon: Icon, color, onPress }: any) {
+    return (
+        <Pressable onPress={onPress} className="active:opacity-80">
+            <View className="bg-white/5 border border-white/10 p-5 rounded-[32px] flex-row items-center backdrop-blur-3xl overflow-hidden">
+                <View className="absolute -right-4 -top-4 w-24 h-24 bg-white/5 rounded-full blur-3xl" />
+                <View style={{ backgroundColor: `${color}20` }} className="w-14 h-14 rounded-2xl items-center justify-center mr-4 border border-white/10">
+                    <Icon size={24} color={color} strokeWidth={2} />
+                </View>
+                <View className="flex-1">
+                    <Text className="text-white/40 text-[9px] font-black uppercase tracking-[2px] mb-1">Active Protocol</Text>
+                    <Text className="text-white text-lg font-bold leading-tight">{title}</Text>
+                    <Text className="text-white/60 text-xs mt-0.5">{subtitle}</Text>
+                </View>
+                <ChevronRight size={20} color="rgba(255,255,255,0.3)" />
+            </View>
+        </Pressable>
+    );
+}
 
 export default function HomeScreen() {
-    // ... hooks remain same ...
     const today = new Date().toISOString().split('T')[0];
     const { factors, calculateRisk } = useRiskStore();
     const { getScore: getDietScore } = useDietStore();
@@ -116,7 +132,7 @@ export default function HomeScreen() {
 
     return (
         <ScreenContainer darkStatus={false} withPadding={false} className="bg-black">
-            {/* ... Background ... */}
+            {/* Fullscreen Cinematic Background */}
             <View style={styles.heroBg}>
                 <Image
                     source={require('../../assets/home_hero_bg.png')}
@@ -131,7 +147,7 @@ export default function HomeScreen() {
             </View>
 
             <ScrollView contentContainerStyle={{ paddingBottom: 150 }} showsVerticalScrollIndicator={false}>
-                {/* ... Header ... */}
+                {/* 1. Header with Stats */}
                 <Animated.View entering={FadeInDown.duration(1000)} className="px-6 pt-12 pb-6 flex-row items-center justify-between">
                     <View>
                         <Text className="text-white/60 text-xs font-bold mb-1">HELLO, ALESSANDRO 👋</Text>
@@ -149,7 +165,7 @@ export default function HomeScreen() {
 
                 <View className="h-[1px] bg-white/10 mx-6 mb-6" />
 
-                {/* ... Upcoming ... */}
+                {/* 2. Upcoming Section */}
                 <Animated.View entering={FadeInDown.delay(200).duration(800)} className="px-6 mb-8">
                     <Text className="text-white/40 text-[10px] font-black uppercase tracking-[4px] mb-4">Upcoming</Text>
                     <View className="gap-3">
