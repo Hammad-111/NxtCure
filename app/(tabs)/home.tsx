@@ -11,6 +11,7 @@ import { useLifestyleStore } from '../../src/store/lifestyleStore';
 import { useRiskStore } from '../../src/store/riskStore';
 import { useGoalStore } from '../../src/store/goalStore';
 import { useProfileStore } from '../../src/store/profileStore';
+import { useCarcinogenStore } from '../../src/store/carcinogenStore';
 import Svg, { Circle, Defs, LinearGradient as SvgGradient, Stop } from 'react-native-svg';
 
 const { width, height } = Dimensions.get('window');
@@ -119,20 +120,24 @@ export default function HomeScreen() {
     const today = new Date().toISOString().split('T')[0];
     const { factors, calculateRisk } = useRiskStore();
     const { getScore: getDietScore } = useDietStore();
-    const { getConsistencyScore } = useLifestyleStore();
+    const { logs: lifestyleLogs, getConsistencyScore } = useLifestyleStore();
     const { hasGoal } = useGoalStore();
     const { name } = useProfileStore();
+    const { getAvoidanceStats, exposures } = useCarcinogenStore();
     const router = useRouter();
 
     const dietScore = getDietScore(today);
     const lifestyleScore = getConsistencyScore(today);
+    const currentLifestyle = lifestyleLogs[today] || { exerciseMinutes: 0 };
     const { level: riskLevel, score: preventionScore } = calculateRisk(dietScore, lifestyleScore);
 
-    // Derived scores for demo (in real app these would come from store)
-    const dietPercentage = Math.round((dietScore / 7) * 100) || 85;
-    const exercisePercentage = 100; // Demo
-    const carcinogenScore = 70; // 2 exposures -> somewhat risky but mostly okay
-    const screeningScore = 100;
+    const { avoided, total } = getAvoidanceStats();
+    const carcinogenScore = Math.round((avoided / total) * 100);
+    const carcinogenCount = new Set(exposures.filter(e => e.date === today).map(e => e.carcinogenId)).size;
+
+    const dietPercentage = Math.round((dietScore / 7) * 100) || 0;
+    const exercisePercentage = currentLifestyle.exerciseMinutes >= 30 ? 100 : 0;
+    const screeningScore = 100; // Placeholder for now
 
     // Determine cancer status based on goals
     const getCancerStatus = () => {
@@ -211,7 +216,7 @@ export default function HomeScreen() {
                                 <HealthGauge
                                     score={carcinogenScore}
                                     label="Carcinogens"
-                                    subLabel="2 Exposures"
+                                    subLabel={`${carcinogenCount} Today`}
                                     size={width * 0.36}
                                     strokeWidth={8}
                                     showStatus={false}
@@ -243,7 +248,7 @@ export default function HomeScreen() {
                             <Search size={24} color="#1DD1A1" className="mb-2" />
                             <Text className="text-white font-bold text-xs text-center">Self-Exam Guide</Text>
                         </Pressable>
-                        <Pressable onPress={() => router.push('/learn')} className="flex-1 bg-white/5 border border-white/10 p-4 rounded-2xl items-center active:bg-white/10">
+                        <Pressable onPress={() => router.push('/learn/carcinogen-db')} className="flex-1 bg-white/5 border border-white/10 p-4 rounded-2xl items-center active:bg-white/10">
                             <Shield size={24} color="#45AAF2" className="mb-2" />
                             <Text className="text-white font-bold text-xs text-center">Carcinogens Database</Text>
                         </Pressable>

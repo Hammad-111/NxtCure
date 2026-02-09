@@ -1,6 +1,6 @@
 import React, { useMemo, useState } from 'react';
 import { View, Text, ScrollView, Pressable, Image, StyleSheet, Dimensions, Modal, TextInput } from 'react-native';
-import { Check, Info, AlertCircle, CigaretteOff, WineOff, Sun, Activity as ExerciseIcon, ShieldCheck, ChevronLeft, Fingerprint, Plus, Activity, Microscope } from 'lucide-react-native';
+import { Check, Info, AlertCircle, CigaretteOff, WineOff, Sun, Activity as ExerciseIcon, ShieldCheck, ChevronLeft, Fingerprint, Plus, Activity, Microscope, Zap, BarChart3 } from 'lucide-react-native';
 import { ScreenContainer } from '../../src/components/ui/ScreenContainer';
 import { useDietStore, DailyLog } from '../../src/store/dietStore';
 import { useLifestyleStore } from '../../src/store/lifestyleStore';
@@ -171,6 +171,28 @@ export default function TrackScreen() {
                             <Text className="text-white font-bold text-center text-xs">Perform Exam</Text>
                         </Pressable>
                     </View>
+
+                    <View className="flex-row gap-4 mt-4">
+                        <Pressable
+                            onPress={() => router.push('/learn/scanner')}
+                            className="flex-1 bg-white/5 border border-white/10 p-5 rounded-[28px] items-center backdrop-blur-3xl"
+                        >
+                            <View className="w-12 h-12 bg-blue-500/10 rounded-2xl items-center justify-center mb-3">
+                                <Zap size={24} color="#45AAF2" />
+                            </View>
+                            <Text className="text-white font-bold text-center text-xs">AI Scanner</Text>
+                        </Pressable>
+
+                        <Pressable
+                            onPress={() => router.push('/learn/report')}
+                            className="flex-1 bg-white/5 border border-white/10 p-5 rounded-[28px] items-center backdrop-blur-3xl"
+                        >
+                            <View className="w-12 h-12 bg-purple-500/10 rounded-2xl items-center justify-center mb-3">
+                                <BarChart3 size={24} color="#A55EEA" />
+                            </View>
+                            <Text className="text-white font-bold text-center text-xs">Weekly Report</Text>
+                        </Pressable>
+                    </View>
                 </Animated.View>
 
                 {/* Lifestyle Vitals Section */}
@@ -212,7 +234,7 @@ export default function TrackScreen() {
                         </Pressable>
 
                         <Pressable
-                            onPress={() => toggleHabit(today, 'carcinogenAwareness')}
+                            onPress={() => router.push('/learn/carcinogen-db')}
                             style={[styles.glassCard, currentLifestyle.carcinogenAwareness && styles.activeCard]}
                             className="flex-1 min-w-[45%] p-5 items-center active:opacity-80"
                         >
