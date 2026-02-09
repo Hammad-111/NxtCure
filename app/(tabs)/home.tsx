@@ -278,7 +278,59 @@ export default function HomeScreen() {
 
                 <View className="h-[1px] bg-white/10 mx-6 mb-8" />
 
+                {/* 6. Treatment Support Hub */}
+                <Animated.View entering={FadeInDown.delay(600).duration(800)} className="px-6 mb-10">
+                    <Text className="text-white/40 text-[10px] font-black uppercase tracking-[4px] mb-4">Treatment Support</Text>
 
+                    <Pressable
+                        onPress={() => router.push('/treatment/journey')}
+                        className="bg-gradient-to-r from-red-500/10 to-transparent border border-red-500/20 p-6 rounded-[32px] mb-4 flex-row items-center"
+                    >
+                        <View className="bg-red-500/20 w-12 h-12 rounded-xl items-center justify-center mr-5">
+                            <Activity size={24} color="#EB3B5A" />
+                        </View>
+                        <View className="flex-1">
+                            <Text className="text-white font-black text-lg">Patient Journey</Text>
+                            <Text className="text-white/40 text-[10px] font-bold uppercase tracking-widest mt-1">Track Clinical Milestones</Text>
+                        </View>
+                        <ChevronRight size={20} color="white" opacity={0.3} />
+                    </Pressable>
+
+                    <View className="flex-row gap-3">
+                        <Pressable
+                            onPress={() => router.push('/treatment/chemo-nutrition')}
+                            className="flex-1 bg-white/5 border border-white/10 p-4 rounded-2xl"
+                        >
+                            <View className="bg-nxtcure-primary/20 w-10 h-10 rounded-xl items-center justify-center mb-3">
+                                <Text className="text-xl">🍎</Text>
+                            </View>
+                            <Text className="text-white font-bold text-sm">Nutrition</Text>
+                            <Text className="text-white/30 text-[9px] uppercase font-black tracking-widest mt-1">Chemo Guide</Text>
+                        </Pressable>
+
+                        <Pressable
+                            onPress={() => router.push('/treatment/side-effects')}
+                            className="flex-1 bg-white/5 border border-white/10 p-4 rounded-2xl"
+                        >
+                            <View className="bg-purple-500/20 w-10 h-10 rounded-xl items-center justify-center mb-3">
+                                <Text className="text-xl">💊</Text>
+                            </View>
+                            <Text className="text-white font-bold text-sm">Side Effects</Text>
+                            <Text className="text-white/30 text-[9px] uppercase font-black tracking-widest mt-1">Tracker</Text>
+                        </Pressable>
+
+                        <Pressable
+                            onPress={() => router.push('/treatment/decision-support')}
+                            className="flex-1 bg-white/5 border border-white/10 p-4 rounded-2xl"
+                        >
+                            <View className="bg-blue-500/20 w-10 h-10 rounded-xl items-center justify-center mb-3">
+                                <Text className="text-xl">⚖️</Text>
+                            </View>
+                            <Text className="text-white font-bold text-sm">Decisions</Text>
+                            <Text className="text-white/30 text-[9px] uppercase font-black tracking-widest mt-1">Compare Rx</Text>
+                        </Pressable>
+                    </View>
+                </Animated.View>
 
                 <View className="h-[1px] bg-white/10 mx-6 mb-8" />
 
