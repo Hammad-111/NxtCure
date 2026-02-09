@@ -9,6 +9,8 @@ import Animated, { FadeInDown, useAnimatedProps, withTiming, } from 'react-nativ
 import { useDietStore } from '../../src/store/dietStore';
 import { useLifestyleStore } from '../../src/store/lifestyleStore';
 import { useRiskStore } from '../../src/store/riskStore';
+import { useGoalStore } from '../../src/store/goalStore';
+import { useProfileStore } from '../../src/store/profileStore';
 import Svg, { Circle, Defs, LinearGradient as SvgGradient, Stop } from 'react-native-svg';
 
 const { width, height } = Dimensions.get('window');
@@ -118,6 +120,8 @@ export default function HomeScreen() {
     const { factors, calculateRisk } = useRiskStore();
     const { getScore: getDietScore } = useDietStore();
     const { getConsistencyScore } = useLifestyleStore();
+    const { hasGoal } = useGoalStore();
+    const { name } = useProfileStore();
     const router = useRouter();
 
     const dietScore = getDietScore(today);
@@ -129,6 +133,13 @@ export default function HomeScreen() {
     const exercisePercentage = 100; // Demo
     const carcinogenScore = 70; // 2 exposures -> somewhat risky but mostly okay
     const screeningScore = 100;
+
+    // Determine cancer status based on goals
+    const getCancerStatus = () => {
+        if (hasGoal('3')) return 'Active cancer treatment';
+        if (hasGoal('4')) return 'Cancer survivor';
+        return 'No active cancer';
+    };
 
     return (
         <ScreenContainer darkStatus={false} withPadding={false} className="bg-black">
@@ -150,8 +161,8 @@ export default function HomeScreen() {
                 {/* 1. Header with Stats */}
                 <Animated.View entering={FadeInDown.duration(1000)} className="px-6 pt-12 pb-6 flex-row items-center justify-between">
                     <View>
-                        <Text className="text-white/60 text-xs font-bold mb-1">HELLO, ALESSANDRO 👋</Text>
-                        <Text className="text-white text-sm font-bold opacity-60">Age 25 • Male • No active cancer</Text>
+                        <Text className="text-white/60 text-xs font-bold mb-1">HELLO, {name.toUpperCase()} 👋</Text>
+                        <Text className="text-white text-sm font-bold opacity-60">Age 25 • Male • {getCancerStatus()}</Text>
                     </View>
                     <View className="flex-row gap-4">
                         <Pressable className="bg-white/10 p-2.5 rounded-xl border border-white/20">
@@ -165,23 +176,8 @@ export default function HomeScreen() {
 
                 <View className="h-[1px] bg-white/10 mx-6 mb-6" />
 
-                {/* 2. Upcoming Section */}
-                <Animated.View entering={FadeInDown.delay(200).duration(800)} className="px-6 mb-8">
-                    <Text className="text-white/40 text-[10px] font-black uppercase tracking-[4px] mb-4">Upcoming</Text>
-                    <View className="gap-3">
-                        <View className="flex-row items-center">
-                            <View className="w-1.5 h-1.5 rounded-full bg-nxtcure-primary mr-3" />
-                            <Text className="text-white font-bold">Testicular self-exam (due today)</Text>
-                        </View>
-                        <View className="flex-row items-center">
-                            <View className="w-1.5 h-1.5 rounded-full bg-blue-400 mr-3" />
-                            <Text className="text-white font-bold">Dental cleaning (Feb 15)</Text>
-                        </View>
-                    </View>
-                </Animated.View>
-
                 {/* 3. Prevention Score Card */}
-                <Animated.View entering={FadeInDown.delay(400).duration(800)} className="px-6 mb-8">
+                <Animated.View entering={FadeInDown.delay(200).duration(800)} className="px-6 mb-8">
                     <Text className="text-white/40 text-[10px] font-black uppercase tracking-[4px] mb-4">Your Prevention Score</Text>
                     <Card className="bg-white/5 border border-white/10 p-6">
                         {/* Main Large Gauge */}
@@ -196,7 +192,7 @@ export default function HomeScreen() {
                                     score={dietPercentage}
                                     label="Diet"
                                     subLabel="6/7 Days"
-                                    size={100}
+                                    size={width * 0.36}
                                     strokeWidth={8}
                                     showStatus={false}
                                 />
@@ -206,7 +202,7 @@ export default function HomeScreen() {
                                     score={exercisePercentage}
                                     label="Exercise"
                                     subLabel="180 Min"
-                                    size={100}
+                                    size={width * 0.36}
                                     strokeWidth={8}
                                     showStatus={false}
                                 />
@@ -216,7 +212,7 @@ export default function HomeScreen() {
                                     score={carcinogenScore}
                                     label="Carcinogens"
                                     subLabel="2 Exposures"
-                                    size={100}
+                                    size={width * 0.36}
                                     strokeWidth={8}
                                     showStatus={false}
                                 />
@@ -226,7 +222,7 @@ export default function HomeScreen() {
                                     score={screeningScore}
                                     label="Screenings"
                                     subLabel="Up to Date"
-                                    size={100}
+                                    size={width * 0.36}
                                     strokeWidth={8}
                                     showStatus={false}
                                 />
@@ -239,10 +235,8 @@ export default function HomeScreen() {
                     </Card>
                 </Animated.View>
 
-                <View className="h-[1px] bg-white/10 mx-6 mb-8" />
-
                 {/* 4. Quick Access Grid */}
-                <Animated.View entering={FadeInDown.delay(600).duration(800)} className="px-6 mb-8">
+                <Animated.View entering={FadeInDown.delay(400).duration(800)} className="px-6 mb-8">
                     <Text className="text-white/40 text-[10px] font-black uppercase tracking-[4px] mb-4">Quick Access</Text>
                     <View className="flex-row gap-3">
                         <Pressable onPress={() => router.push('/learn/self-exam-tse')} className="flex-1 bg-white/5 border border-white/10 p-4 rounded-2xl items-center active:bg-white/10">
@@ -257,6 +251,23 @@ export default function HomeScreen() {
                             <Activity size={24} color="#FF4757" className="mb-2" />
                             <Text className="text-white font-bold text-xs text-center">Symptom Checker</Text>
                         </Pressable>
+                    </View>
+                </Animated.View>
+
+                <View className="h-[1px] bg-white/10 mx-6 mb-8" />
+
+                {/* 2. Upcoming Section */}
+                <Animated.View entering={FadeInDown.delay(600).duration(800)} className="px-6 mb-8">
+                    <Text className="text-white/40 text-[10px] font-black uppercase tracking-[4px] mb-4">Upcoming</Text>
+                    <View className="gap-3">
+                        <View className="flex-row items-center">
+                            <View className="w-1.5 h-1.5 rounded-full bg-nxtcure-primary mr-3" />
+                            <Text className="text-white font-bold">Testicular self-exam (due today)</Text>
+                        </View>
+                        <View className="flex-row items-center">
+                            <View className="w-1.5 h-1.5 rounded-full bg-blue-400 mr-3" />
+                            <Text className="text-white font-bold">Dental cleaning (Feb 15)</Text>
+                        </View>
                     </View>
                 </Animated.View>
 

@@ -6,6 +6,12 @@ import { View } from "react-native";
 import { MedicalDisclaimerModal } from "../src/components/MedicalDisclaimerModal";
 import { SplashScreen } from "../src/components/ui/SplashScreen";
 import { getSecure, saveSecure, KEYS } from "../src/services/storage";
+import * as NativeSplashScreen from 'expo-splash-screen';
+
+// Keep the splash screen visible while we fetch resources
+NativeSplashScreen.preventAutoHideAsync().catch(() => {
+    /* reloading the app might cause some issues with this, so we catch it */
+});
 
 export default function Layout() {
     const [showDisclaimer, setShowDisclaimer] = useState(false);
@@ -55,7 +61,9 @@ export default function Layout() {
             <MedicalDisclaimerModal visible={showDisclaimer && !showSplash} onAccept={handleAccept} />
 
             {showSplash && (
-                <SplashScreen onFinish={() => setShowSplash(false)} />
+                <SplashScreen onFinish={() => {
+                    setShowSplash(false);
+                }} />
             )}
         </>
     );

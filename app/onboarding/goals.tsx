@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import { View, Text, TouchableOpacity, Pressable, Image, StyleSheet, Dimensions } from 'react-native';
 import { useRouter } from 'expo-router';
 import { ScreenContainer } from '../../src/components/ui/ScreenContainer';
@@ -8,6 +7,7 @@ import { LinearGradient } from 'expo-linear-gradient';
 import Animated, { FadeInDown, FadeInUp, useAnimatedStyle, withSpring, useDerivedValue } from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Logo } from '../../src/components/ui/Logo';
+import { useGoalStore } from '../../src/store/goalStore';
 
 const { width, height } = Dimensions.get('window');
 
@@ -59,7 +59,7 @@ function GoalCard({ goal, isSelected, onPress, index }: { goal: typeof GOALS[0],
 export default function GoalsScreen() {
     const router = useRouter();
     const insets = useSafeAreaInsets();
-    const [selected, setSelected] = useState<string[]>([]);
+    const { selectedGoals, setGoals } = useGoalStore();
 
     const handleBack = () => {
         if (router.canGoBack()) {
@@ -70,8 +70,11 @@ export default function GoalsScreen() {
     };
 
     const toggle = (id: string) => {
-        if (selected.includes(id)) setSelected(selected.filter(i => i !== id));
-        else setSelected([...selected, id]);
+        if (selectedGoals.includes(id)) {
+            setGoals(selectedGoals.filter(i => i !== id));
+        } else {
+            setGoals([...selectedGoals, id]);
+        }
     };
 
     return (
@@ -128,7 +131,7 @@ export default function GoalsScreen() {
                                 key={goal.id}
                                 goal={goal}
                                 index={index}
-                                isSelected={selected.includes(goal.id)}
+                                isSelected={selectedGoals.includes(goal.id)}
                                 onPress={() => toggle(goal.id)}
                             />
                         ))}
@@ -141,7 +144,7 @@ export default function GoalsScreen() {
                     className="mt-6"
                 >
                     <Button
-                        title={selected.length > 0 ? "Continue Journey" : "Skip Progress"}
+                        title={selectedGoals.length > 0 ? "Continue Journey" : "Skip Progress"}
                         onPress={() => router.push('/(tabs)/home')}
                         className="w-full h-18 rounded-[28px] bg-nxtcure-primary shadow-2xl shadow-nxtcure-primary/40"
                         style={{ height: 64 }}
