@@ -1,6 +1,6 @@
 import React, { useMemo, useState } from 'react';
 import { View, Text, ScrollView, Pressable, Image, StyleSheet, Dimensions, Modal, TextInput } from 'react-native';
-import { Check, Info, AlertCircle, CigaretteOff, WineOff, Sun, Activity as ExerciseIcon, ShieldCheck, ChevronLeft, Fingerprint, Plus, Activity, Microscope, Zap, BarChart3 } from 'lucide-react-native';
+import { Check, Info, AlertCircle, CigaretteOff, WineOff, Sun, Activity as ExerciseIcon, ShieldCheck, ChevronLeft, Fingerprint, Plus, Activity, Microscope, Zap, BarChart3, Scale, Dumbbell } from 'lucide-react-native';
 import { ScreenContainer } from '../../src/components/ui/ScreenContainer';
 import { useDietStore, DailyLog } from '../../src/store/dietStore';
 import { useLifestyleStore } from '../../src/store/lifestyleStore';
@@ -195,69 +195,98 @@ export default function TrackScreen() {
                     </View>
                 </Animated.View>
 
-                {/* Lifestyle Vitals Section */}
+                {/* Lifestyle Risk Reduction Section */}
                 <Animated.View entering={FadeInDown.delay(100).duration(800)} className="mb-10">
-                    <Text className="text-white/60 text-[10px] font-black uppercase tracking-[4px] ml-2 mb-4">Lifestyle Vitals</Text>
+                    <Text className="text-white/60 text-[10px] font-black uppercase tracking-[4px] ml-2 mb-4">Risk Reduction Protocols</Text>
 
-                    <View className="flex-row flex-wrap gap-3">
+                    <View className="flex-row flex-wrap gap-4">
+                        {/* Smoking Cessation */}
                         <Pressable
-                            onPress={() => toggleHabit(today, 'smokingFree')}
-                            style={[styles.glassCard, !currentLifestyle.smokingFree && styles.penaltyCard]}
-                            className="flex-1 min-w-[45%] p-5 items-center active:opacity-80"
+                            onPress={() => router.push('/lifestyle/smoking')}
+                            style={styles.glassCard}
+                            className="flex-1 min-w-[45%] p-5 active:opacity-80"
                         >
-                            <CigaretteOff size={24} color={currentLifestyle.smokingFree ? '#1DD1A1' : '#FF4757'} />
-                            <Text className={`text-[10px] font-black mt-3 uppercase tracking-widest text-center ${currentLifestyle.smokingFree ? 'text-white/80' : 'text-red-400'}`}>
-                                {currentLifestyle.smokingFree ? 'Smoke Free' : 'Smoking'}
-                            </Text>
+                            <View className="flex-row items-center justify-between mb-4">
+                                <View className="bg-red-500/10 w-10 h-10 rounded-xl items-center justify-center">
+                                    <CigaretteOff size={20} color="#FF4757" />
+                                </View>
+                                {currentLifestyle.smokingFree && (
+                                    <View className="bg-nxtcure-primary/20 p-1 rounded-full">
+                                        <Check size={12} color="#1DD1A1" strokeWidth={4} />
+                                    </View>
+                                )}
+                            </View>
+                            <Text className="text-white font-black text-sm">Smoking</Text>
+                            <Text className="text-white/40 text-[9px] font-bold uppercase tracking-widest mt-1">Cessation</Text>
                         </Pressable>
 
+                        {/* Alcohol Reduction */}
                         <Pressable
-                            onPress={() => toggleHabit(today, 'alcoholFree')}
-                            style={[styles.glassCard, !currentLifestyle.alcoholFree && styles.penaltyCard]}
-                            className="flex-1 min-w-[45%] p-5 items-center active:opacity-80"
+                            onPress={() => router.push('/lifestyle/alcohol')}
+                            style={styles.glassCard}
+                            className="flex-1 min-w-[45%] p-5 active:opacity-80"
                         >
-                            <WineOff size={24} color={currentLifestyle.alcoholFree ? '#1DD1A1' : '#FF4757'} />
-                            <Text className={`text-[10px] font-black mt-3 uppercase tracking-widest text-center ${currentLifestyle.alcoholFree ? 'text-white/80' : 'text-red-400'}`}>
-                                {currentLifestyle.alcoholFree ? 'Alcohol Free' : 'Drinking'}
-                            </Text>
+                            <View className="flex-row items-center justify-between mb-4">
+                                <View className="bg-purple-500/10 w-10 h-10 rounded-xl items-center justify-center">
+                                    <WineOff size={20} color="#A55EEA" />
+                                </View>
+                                <Text className="text-white/60 font-black text-xs">{currentLifestyle.alcoholUnits || 0}u</Text>
+                            </View>
+                            <Text className="text-white font-black text-sm">Alcohol</Text>
+                            <Text className="text-white/40 text-[9px] font-bold uppercase tracking-widest mt-1">Moderation</Text>
                         </Pressable>
 
+                        {/* Sun Protection */}
                         <Pressable
-                            onPress={() => toggleHabit(today, 'sunScreenApplied')}
-                            style={[styles.glassCard, currentLifestyle.sunScreenApplied && styles.activeCard]}
-                            className="flex-1 min-w-[45%] p-5 items-center active:opacity-80"
+                            onPress={() => router.push('/lifestyle/sun')}
+                            style={styles.glassCard}
+                            className="flex-1 min-w-[45%] p-5 active:opacity-80"
                         >
-                            <Sun size={24} color={currentLifestyle.sunScreenApplied ? '#1DD1A1' : 'rgba(255,255,255,0.4)'} />
-                            <Text className={`text-[10px] font-black mt-3 uppercase tracking-widest text-center ${currentLifestyle.sunScreenApplied ? 'text-nxtcure-primary' : 'text-white/60'}`}>
-                                SPF Shield
-                            </Text>
+                            <View className="flex-row items-center justify-between mb-4">
+                                <View className="bg-yellow-500/10 w-10 h-10 rounded-xl items-center justify-center">
+                                    <Sun size={20} color="#F7B731" />
+                                </View>
+                                {currentLifestyle.sunScreenApplied && (
+                                    <Check size={14} color="#1DD1A1" strokeWidth={3} />
+                                )}
+                            </View>
+                            <Text className="text-white font-black text-sm">Sun Shield</Text>
+                            <Text className="text-white/40 text-[9px] font-bold uppercase tracking-widest mt-1">UV Protection</Text>
                         </Pressable>
 
+                        {/* Weight Management */}
                         <Pressable
-                            onPress={() => router.push('/learn/carcinogen-db')}
-                            style={[styles.glassCard, currentLifestyle.carcinogenAwareness && styles.activeCard]}
-                            className="flex-1 min-w-[45%] p-5 items-center active:opacity-80"
+                            onPress={() => router.push('/lifestyle/weight')}
+                            style={styles.glassCard}
+                            className="flex-1 min-w-[45%] p-5 active:opacity-80"
                         >
-                            <ShieldCheck size={24} color={currentLifestyle.carcinogenAwareness ? '#1DD1A1' : 'rgba(255,255,255,0.4)'} />
-                            <Text className={`text-[10px] font-black mt-3 uppercase tracking-widest text-center ${currentLifestyle.carcinogenAwareness ? 'text-nxtcure-primary' : 'text-white/60'}`}>
-                                IARC Aware
-                            </Text>
+                            <View className="flex-row items-center justify-between mb-4">
+                                <View className="bg-blue-500/10 w-10 h-10 rounded-xl items-center justify-center">
+                                    <Scale size={20} color="#45AAF2" />
+                                </View>
+                                <Text className="text-white/60 font-black text-xs">{currentLifestyle.weight || '--'}kg</Text>
+                            </View>
+                            <Text className="text-white font-black text-sm">Body Comp</Text>
+                            <Text className="text-white/40 text-[9px] font-bold uppercase tracking-widest mt-1">BMI Track</Text>
                         </Pressable>
 
+                        {/* Physical Activity (Full Width) */}
                         <Pressable
-                            onPress={() => setExercise(today, currentLifestyle.exerciseMinutes >= 30 ? 0 : 30)}
-                            style={[styles.glassCard, currentLifestyle.exerciseMinutes >= 30 && styles.activeCard]}
+                            onPress={() => router.push('/lifestyle/activity')}
+                            style={styles.glassCard}
                             className="w-full p-6 flex-row items-center border-white/10 active:opacity-80"
                         >
-                            <View className={`w-14 h-14 rounded-2xl items-center justify-center ${currentLifestyle.exerciseMinutes >= 30 ? 'bg-nxtcure-primary/10' : 'bg-white/5'}`}>
-                                <ExerciseIcon size={26} color={currentLifestyle.exerciseMinutes >= 30 ? '#1DD1A1' : 'rgba(255,255,255,0.4)'} />
+                            <View className="w-14 h-14 bg-nxtcure-primary/10 rounded-2xl items-center justify-center mr-5">
+                                <Dumbbell size={26} color="#1DD1A1" />
                             </View>
-                            <View className="ml-5 flex-1">
-                                <Text className="text-white font-bold text-lg">30m+ Physical Activity</Text>
-                                <Text className="text-white/60 text-[10px] font-black uppercase tracking-widest mt-1">Metabolic Optimization</Text>
+                            <View className="flex-1">
+                                <Text className="text-white font-black text-lg">Activity Lab</Text>
+                                <Text className="text-white/40 text-[10px] font-black uppercase tracking-widest mt-1">
+                                    {currentLifestyle.exerciseMinutes || 0}m logged today
+                                </Text>
                             </View>
-                            <View className={`w-7 h-7 rounded-full border ${currentLifestyle.exerciseMinutes >= 30 ? 'bg-nxtcure-primary border-nxtcure-primary' : 'border-white/20'} items-center justify-center`}>
-                                {currentLifestyle.exerciseMinutes >= 30 && <Check size={16} color="white" strokeWidth={3} />}
+                            <View className="bg-white/5 px-4 py-2 rounded-xl border border-white/10">
+                                <Text className="text-white font-black text-[10px] uppercase tracking-widest">Open Hub</Text>
                             </View>
                         </Pressable>
                     </View>

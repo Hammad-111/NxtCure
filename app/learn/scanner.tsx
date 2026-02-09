@@ -6,8 +6,7 @@ import { ChevronLeft, Zap, ShieldAlert, CheckCircle2, Search, X } from 'lucide-r
 import { useRouter } from 'expo-router';
 import { BlurView } from 'expo-blur';
 import Animated, { FadeIn, FadeOut, Layout } from 'react-native-reanimated';
-import { Card } from '../../src/components/ui/Card';
-import { CARCINOGENS } from '../../src/data/carcinogens';
+
 
 const { width, height } = Dimensions.get('window');
 
