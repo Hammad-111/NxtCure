@@ -145,7 +145,7 @@ export default function GoalsScreen() {
                 >
                     <Button
                         title={selectedGoals.length > 0 ? "Continue Journey" : "Skip Progress"}
-                        onPress={() => router.push('/(tabs)/home')}
+                        onPress={() => router.push('/onboarding/profile-setup')}
                         className="w-full h-18 rounded-[28px] bg-nxtcure-primary shadow-2xl shadow-nxtcure-primary/40"
                         style={{ height: 64 }}
                     />

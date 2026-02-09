@@ -15,7 +15,7 @@ import { Logo } from '../../src/components/ui/Logo';
 const { width, height } = Dimensions.get('window');
 
 export default function ProfileScreen() {
-    const { name, nxtId, familyHistory, previousConditions } = useProfileStore();
+    const { name, nxtId, familyHistory, medicalHistory } = useProfileStore();
     const { logs: dietLogs } = useDietStore();
     const { logs: lifestyleLogs } = useLifestyleStore();
     const { logs: symptomLogs } = useSymptomStore();
@@ -24,7 +24,7 @@ export default function ProfileScreen() {
     const handleExport = async () => {
         const fullAudit = {
             identity: { name, nxtId },
-            history: { familyHistory, previousConditions },
+            history: { familyHistory, medicalHistory },
             data: {
                 nutritionalEvents: Object.keys(dietLogs).length,
                 lifestyleCheckins: Object.keys(lifestyleLogs).length,

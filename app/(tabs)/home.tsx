@@ -122,7 +122,7 @@ export default function HomeScreen() {
     const { getScore: getDietScore } = useDietStore();
     const { logs: lifestyleLogs, getConsistencyScore } = useLifestyleStore();
     const { hasGoal } = useGoalStore();
-    const { name } = useProfileStore();
+    const { name, age, sex } = useProfileStore();
     const { getAvoidanceStats, exposures } = useCarcinogenStore();
     const router = useRouter();
 
@@ -167,7 +167,9 @@ export default function HomeScreen() {
                 <Animated.View entering={FadeInDown.duration(1000)} className="px-6 pt-12 pb-6 flex-row items-center justify-between">
                     <View>
                         <Text className="text-white/60 text-xs font-bold mb-1">HELLO, {name.toUpperCase()} 👋</Text>
-                        <Text className="text-white text-sm font-bold opacity-60">Age 25 • Male • {getCancerStatus()}</Text>
+                        <Text className="text-white text-sm font-bold opacity-60">
+                            {age ? `Age ${age}` : 'Age N/A'} • {sex || 'N/A'} • {getCancerStatus()}
+                        </Text>
                     </View>
                     <View className="flex-row gap-4">
                         <Pressable className="bg-white/10 p-2.5 rounded-xl border border-white/20">
@@ -262,7 +264,7 @@ export default function HomeScreen() {
                 {/* 5. Cancer Encyclopedia Link */}
                 <Animated.View entering={FadeInDown.delay(500).duration(800)} className="px-6 mb-8">
                     <Pressable
-                        onPress={() => router.push('/learn/cancer-testicular')}
+                        onPress={() => router.push('/learn/encyclopedia')}
                         className="bg-nxtcure-primary/10 border border-nxtcure-primary/30 p-6 rounded-[32px] flex-row items-center"
                     >
                         <View className="bg-nxtcure-primary/20 w-12 h-12 rounded-xl items-center justify-center mr-5">
