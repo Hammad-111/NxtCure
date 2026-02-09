@@ -81,7 +81,7 @@ export default function TrackScreen() {
     const { logs: dietLogs, toggleItem, getScore: getDietScore } = useDietStore();
     const { logs: lifestyleLogs, toggleHabit, setExercise, getConsistencyScore } = useLifestyleStore();
     const { factors, calculateGlobalPreventionScore } = useRiskStore();
-    const { addLog: addSymptomLog } = useSymptomStore();
+    const { analyzeSymptom, addLog: addSymptomLog } = useSymptomStore();
     const router = useRouter();
 
     const [symptomModal, setSymptomModal] = useState(false);
@@ -103,11 +103,8 @@ export default function TrackScreen() {
 
     const handleSymptomSubmit = () => {
         if (symptomText.trim()) {
-            addSymptomLog({
-                symptoms: [symptomText],
-                severity,
-                notes: ''
-            });
+            const analysis = analyzeSymptom(symptomText);
+            addSymptomLog(symptomText, analysis);
             setSymptomText('');
             setSymptomModal(false);
         }

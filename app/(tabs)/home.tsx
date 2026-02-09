@@ -1,6 +1,6 @@
 import { useState, useMemo } from 'react';
 import { View, Text, ScrollView, Pressable, Image, StyleSheet, Dimensions } from 'react-native';
-import { Shield, Search, ChevronRight, Activity, Bell, Info, Fingerprint, Award, Zap, Settings } from 'lucide-react-native';
+import { Search, ChevronRight, Bell, Settings, Shield, Activity, GraduationCap } from 'lucide-react-native';
 import { useRouter } from 'expo-router';
 import { ScreenContainer } from '../../src/components/ui/ScreenContainer';
 import { Card } from '../../src/components/ui/Card';
@@ -242,42 +242,43 @@ export default function HomeScreen() {
 
                 {/* 4. Quick Access Grid */}
                 <Animated.View entering={FadeInDown.delay(400).duration(800)} className="px-6 mb-8">
-                    <Text className="text-white/40 text-[10px] font-black uppercase tracking-[4px] mb-4">Quick Access</Text>
-                    <View className="flex-row gap-3">
-                        <Pressable onPress={() => router.push('/learn/self-exam-tse')} className="flex-1 bg-white/5 border border-white/10 p-4 rounded-2xl items-center active:bg-white/10">
-                            <Search size={24} color="#1DD1A1" className="mb-2" />
-                            <Text className="text-white font-bold text-xs text-center">Self-Exam Guide</Text>
+                    <Text className="text-white/40 text-[10px] font-black uppercase tracking-[4px] mb-4">Clinical Hub</Text>
+                    <View className="flex-row flex-wrap gap-3">
+                        <Pressable onPress={() => router.push('/learn/self-exam-tse')} className="flex-1 min-w-[30%] bg-white/5 border border-white/10 p-4 rounded-2xl items-center active:bg-white/10">
+                            <Search size={22} color="#1DD1A1" className="mb-2" />
+                            <Text className="text-white font-bold text-[10px] text-center">Self-Exam</Text>
                         </Pressable>
-                        <Pressable onPress={() => router.push('/learn/carcinogen-db')} className="flex-1 bg-white/5 border border-white/10 p-4 rounded-2xl items-center active:bg-white/10">
-                            <Shield size={24} color="#45AAF2" className="mb-2" />
-                            <Text className="text-white font-bold text-xs text-center">Carcinogens Database</Text>
+                        <Pressable onPress={() => router.push('/learn/symptom-checker')} className="flex-1 min-w-[30%] bg-white/5 border border-white/10 p-4 rounded-2xl items-center active:bg-white/10">
+                            <Activity size={22} color="#FF4757" className="mb-2" />
+                            <Text className="text-white font-bold text-[10px] text-center">Triage</Text>
                         </Pressable>
-                        <Pressable onPress={() => router.push('/track')} className="flex-1 bg-white/5 border border-white/10 p-4 rounded-2xl items-center active:bg-white/10">
-                            <Activity size={24} color="#FF4757" className="mb-2" />
-                            <Text className="text-white font-bold text-xs text-center">Symptom Checker</Text>
+                        <Pressable onPress={() => router.push('/learn/carcinogen-db')} className="flex-1 min-w-[30%] bg-white/5 border border-white/10 p-4 rounded-2xl items-center active:bg-white/10">
+                            <Shield size={22} color="#45AAF2" className="mb-2" />
+                            <Text className="text-white font-bold text-[10px] text-center">Database</Text>
                         </Pressable>
                     </View>
                 </Animated.View>
 
-                <View className="h-[1px] bg-white/10 mx-6 mb-8" />
-
-                {/* 2. Prevention Score Card */}
-                <Animated.View entering={FadeInDown.delay(600).duration(800)} className="px-6 mb-8">
-                    <Text className="text-white/40 text-[10px] font-black uppercase tracking-[4px] mb-4">Your Prevention Score</Text>
-                    <Pressable onPress={() => router.push('/risk/profile')} className="mb-10">
-                        <Card className="bg-white/5 border-white/10 p-6 rounded-[40px] shadow-2xl shadow-black">
-                            <View className="flex-row items-center justify-between mb-8">
-                                <View className="bg-nxtcure-primary/10 px-4 py-2 rounded-full border border-nxtcure-primary/30">
-                                    <Text className="text-nxtcure-primary font-black text-[10px] uppercase tracking-widest">{riskLevel}</Text>
-                                </View>
-                                <View className="flex-row items-center gap-1">
-                                    <Shield size={12} color="#1DD1A1" />
-                                    <Text className="text-white/40 text-[10px] font-black uppercase tracking-widest">Clinical Score</Text>
-                                </View>
-                            </View>
-                        </Card>
+                {/* 5. Cancer Encyclopedia Link */}
+                <Animated.View entering={FadeInDown.delay(500).duration(800)} className="px-6 mb-8">
+                    <Pressable
+                        onPress={() => router.push('/learn/cancer-testicular')}
+                        className="bg-nxtcure-primary/10 border border-nxtcure-primary/30 p-6 rounded-[32px] flex-row items-center"
+                    >
+                        <View className="bg-nxtcure-primary/20 w-12 h-12 rounded-xl items-center justify-center mr-5">
+                            <GraduationCap size={24} color="#1DD1A1" />
+                        </View>
+                        <View className="flex-1">
+                            <Text className="text-white font-black text-lg">Cancer Encyclopedia</Text>
+                            <Text className="text-white/40 text-[10px] font-bold uppercase tracking-widest mt-1">100+ Clinical Profiles</Text>
+                        </View>
+                        <ChevronRight size={20} color="white" opacity={0.3} />
                     </Pressable>
                 </Animated.View>
+
+                <View className="h-[1px] bg-white/10 mx-6 mb-8" />
+
+
 
                 <View className="h-[1px] bg-white/10 mx-6 mb-8" />
 
