@@ -1,255 +1,283 @@
-import React, { useMemo, useState } from 'react';
-import { View, Text, ScrollView, Pressable, TextInput, Modal, StyleSheet, Dimensions, Image } from 'react-native';
-import { Calendar, Bell, CheckCircle2, AlertCircle, Clock, Plus, ChevronLeft, MapPin, User, Trash2, Fingerprint } from 'lucide-react-native';
+import React, { useMemo } from 'react';
+import { View, Text, ScrollView, Pressable, StyleSheet, Dimensions, Image } from 'react-native';
+import { Calendar, Bell, CheckCircle2, AlertCircle, Clock, Plus, ChevronRight, User, Info, ShieldCheck, Zap, Video } from 'lucide-react-native';
 import { ScreenContainer } from '../../src/components/ui/ScreenContainer';
 import { Card } from '../../src/components/ui/Card';
 import { useScreeningStore, ScreeningType } from '../../src/store/screeningStore';
 import { useRiskStore } from '../../src/store/riskStore';
-import { useAppointmentStore, Appointment } from '../../src/store/appointmentStore';
-import { useRouter, Link } from 'expo-router';
+import { useRouter } from 'expo-router';
 import { LinearGradient } from 'expo-linear-gradient';
-import Animated, { FadeInDown } from 'react-native-reanimated';
-import { Logo } from '../../src/components/ui/Logo';
+import Animated, { FadeInDown, FadeInRight } from 'react-native-reanimated';
 
-const { width, height } = Dimensions.get('window');
+const { width } = Dimensions.get('window');
+
+interface ScreeningProtocol {
+    id: ScreeningType;
+    title: string;
+    frequency: 'Monthly' | '6 Months' | 'Annual' | 'Future' | 'Clinical';
+    frequencyMonths: number;
+    icon: any;
+    description: string;
+    color: string;
+    videoUrl?: string;
+    ageStart?: number;
+    sex?: 'male' | 'female' | 'both';
+}
+
+const PROTOCOLS: ScreeningProtocol[] = [
+    {
+        id: 'testicular',
+        title: 'Testicular Self-Exam',
+        frequency: 'Monthly',
+        frequencyMonths: 1,
+        icon: User,
+        description: 'Monthly manual check for lumps or changes.',
+        color: '#1DD1A1',
+        sex: 'male'
+    },
+    {
+        id: 'breast_self',
+        title: 'Breast Self-Exam',
+        frequency: 'Monthly',
+        frequencyMonths: 1,
+        icon: ShieldCheck,
+        description: 'Monthly manual check for lumps or changes.',
+        color: '#A55EEA',
+        videoUrl: '#',
+        sex: 'female'
+    },
+    {
+        id: 'skin',
+        title: 'Skin Self-Check',
+        frequency: '6 Months',
+        frequencyMonths: 6,
+        icon: Zap,
+        description: 'Check moles for ABCDE changes.',
+        color: '#45AAF2'
+    },
+    {
+        id: 'dental',
+        title: 'Dental Oral Exam',
+        frequency: 'Annual',
+        frequencyMonths: 12,
+        icon: Info,
+        description: 'Clinical screening for oral cancers.',
+        color: '#F7B731'
+    },
+    {
+        id: 'mammogram',
+        title: 'Mammogram',
+        frequency: 'Annual',
+        frequencyMonths: 12,
+        icon: ShieldCheck,
+        description: 'X-ray screening for early detection.',
+        color: '#FF4757',
+        ageStart: 40,
+        sex: 'female'
+    },
+    {
+        id: 'pap_smear',
+        title: 'Pap Smear',
+        frequency: 'Clinical',
+        frequencyMonths: 36,
+        icon: ShieldCheck,
+        description: 'Cervical cancer screening.',
+        color: '#A55EEA',
+        sex: 'female'
+    },
+    {
+        id: 'colonoscopy',
+        title: 'Colonoscopy',
+        frequency: 'Clinical',
+        frequencyMonths: 120,
+        icon: AlertCircle,
+        description: 'The gold standard for colorectal detection.',
+        color: '#F7B731',
+        ageStart: 45
+    },
+    {
+        id: 'prostate_psa',
+        title: 'Prostate PSA',
+        frequency: 'Annual',
+        frequencyMonths: 12,
+        icon: User,
+        description: 'PSA blood test for standard monitoring.',
+        color: '#45AAF2',
+        ageStart: 50,
+        sex: 'male'
+    },
+    {
+        id: 'ldct_lung',
+        title: 'Low-Dose CT Chest',
+        frequency: 'Annual',
+        frequencyMonths: 12,
+        icon: Info,
+        description: 'Smoking history screening.',
+        color: '#FF4757',
+        ageStart: 50
+    }
+];
 
 export default function RemindersScreen() {
-    const { logs } = useScreeningStore();
+    const { logs, markAsDone } = useScreeningStore();
     const { factors } = useRiskStore();
-    const { appointments, addAppointment, removeAppointment } = useAppointmentStore();
     const router = useRouter();
 
-    const [modalVisible, setModalVisible] = useState(false);
-    const [title, setTitle] = useState('');
-    const [doctor, setDoctor] = useState('');
-    const [date, setDate] = useState('');
-
-    const baseRecommendations = useMemo(() => {
-        const list = [
-            { id: 'tse', title: 'Self-Exam', frequencyMonths: 1, icon: Clock, color: '#1DD1A1', route: '/learn/self-exam-tse' },
-            { id: 'skin', title: 'Skin Check', frequencyMonths: 6, icon: Calendar, color: '#45aaf2', route: '/learn' },
-            { id: 'dental', title: 'Oral Scan', frequencyMonths: 12, icon: Calendar, color: '#a4b0be', route: '/learn' }
-        ];
-        if (factors.age >= 45) {
-            list.push({ id: 'colonoscopy', title: 'Colonoscopy', frequencyMonths: 120, icon: AlertCircle, color: '#FF4757', route: '/learn' });
-        }
-        return list;
-    }, [factors.age]);
-
-    const screeningItems = useMemo(() => {
+    const filteredProtocols = useMemo(() => {
         const now = new Date();
-        return baseRecommendations.map(rec => {
-            const lastDone = logs[rec.id as ScreeningType];
+        return PROTOCOLS.map(p => {
+            // Check if applicable
+            const isSexMatch = !p.sex || p.sex === factors.sex || p.sex === 'both';
+            const isAgeMatch = !p.ageStart || factors.age >= p.ageStart;
+
+            const lastDone = logs[p.id];
             let status = 'Pending';
-            let urgent = true;
+            let overdue = false;
+            let nextDateText = '';
+            let lastDoneText = '';
+
             if (lastDone) {
                 const lastDate = new Date(lastDone);
+                lastDoneText = `${Math.floor((now.getTime() - lastDate.getTime()) / (1000 * 60 * 60 * 24))} days ago`;
+
                 const nextDate = new Date(lastDate);
-                nextDate.setMonth(nextDate.getMonth() + rec.frequencyMonths);
+                nextDate.setMonth(nextDate.getMonth() + p.frequencyMonths);
+
                 const diffTime = nextDate.getTime() - now.getTime();
                 const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-                if (diffDays <= 0) { status = 'Action Required'; urgent = true; }
-                else { status = `Next: ${nextDate.toLocaleDateString('en-US', { month: 'short', year: 'numeric' })}`; urgent = false; }
-            }
-            return { ...rec, status, urgent };
-        });
-    }, [baseRecommendations, logs]);
 
-    const handleAddAppointment = () => {
-        if (title && date) {
-            addAppointment({
-                title,
-                doctor,
-                date: new Date(date).toISOString(),
-                location: 'Main Clinic',
-                type: 'oncology'
-            });
-            setModalVisible(false);
-            setTitle('');
-            setDoctor('');
-            setDate('');
-        }
-    };
+                if (diffDays <= 0) {
+                    status = 'OVERDUE';
+                    overdue = true;
+                } else {
+                    status = 'Actionable';
+                    nextDateText = `Next: ${nextDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}`;
+                }
+            } else {
+                status = isAgeMatch ? 'Initial Due' : 'Not Yet Recommended';
+                overdue = isAgeMatch;
+            }
+
+            return {
+                ...p,
+                isApplicable: isSexMatch,
+                isRecommended: isAgeMatch,
+                status,
+                overdue,
+                nextDateText,
+                lastDoneText
+            };
+        });
+    }, [factors, logs]);
+
+    const sections = [
+        { title: 'MONTHLY', data: filteredProtocols.filter(p => p.isApplicable && p.isRecommended && p.frequency === 'Monthly') },
+        { title: 'EVERY 6 MONTHS', data: filteredProtocols.filter(p => p.isApplicable && p.isRecommended && p.frequency === '6 Months') },
+        { title: 'ANNUALLY', data: filteredProtocols.filter(p => p.isApplicable && p.isRecommended && (p.frequency === 'Annual' || p.frequency === 'Clinical')) },
+        { title: 'NOT YET RECOMMENDED', data: filteredProtocols.filter(p => p.isApplicable && !p.isRecommended) },
+    ];
 
     return (
-        <ScreenContainer darkStatus={false} withPadding={false} className="bg-black">
-            {/* Cinematic Background */}
-            <View style={styles.bgContainer}>
-                <Image
-                    source={require('../../assets/goals_hero.png')}
-                    style={styles.bgImage}
-                    resizeMode="cover"
-                    blurRadius={3}
-                />
-                <LinearGradient
-                    colors={['rgba(0,0,0,0.85)', 'rgba(5, 53, 61, 0.4)', 'rgba(0, 0, 0, 0.8)', 'black']}
-                    style={StyleSheet.absoluteFill}
-                    locations={[0, 0.2, 0.5, 0.95]}
-                />
-            </View>
+        <ScreenContainer hasWave={false} darkStatus={false} withPadding={false} fullScreen={true} className="bg-black">
+            <LinearGradient colors={['#05253D', '#000000']} style={StyleSheet.absoluteFill} />
 
-            {/* Header */}
             <View className="px-8 pt-12 pb-6 flex-row justify-between items-center">
                 <View>
-                    <View className="flex-row items-center mb-1">
-                        <Logo size={20} style={{ marginRight: 8 }} />
-                        <Text className="text-white/40 text-[9px] font-black uppercase tracking-[5px]">Schedule Hub</Text>
-                    </View>
-                    <Text className="text-white text-3xl font-black tracking-tighter">Clinical Reminders</Text>
+                    <Text className="text-white/40 text-[9px] font-black uppercase tracking-[5px] mb-1">Pillar 2: Early Detection</Text>
+                    <Text className="text-white text-3xl font-black tracking-tighter">Human Baseline.</Text>
                 </View>
-                <Pressable onPress={() => setModalVisible(true)} className="bg-nxtcure-primary/20 w-12 h-12 rounded-2xl items-center justify-center border border-nxtcure-primary/30 backdrop-blur-3xl">
-                    <Plus size={24} color="#1DD1A1" />
-                </Pressable>
+                <View className="bg-white/10 w-12 h-12 rounded-2xl items-center justify-center border border-white/20">
+                    <Bell size={24} color="white" />
+                </View>
             </View>
 
             <ScrollView className="flex-1 px-8" showsVerticalScrollIndicator={false} contentContainerStyle={{ paddingBottom: 150 }}>
-                {/* Appointments Section */}
-                <Animated.View entering={FadeInDown.duration(800)} className="mb-10">
-                    <Text className="text-white/60 text-[10px] font-black uppercase tracking-[4px] ml-2 mb-4">Upcoming Appointments</Text>
-                    {appointments.length > 0 ? appointments.map((app) => (
-                        <Card key={app.id} className="mb-4 bg-white/5 border-white/10 p-6 flex-row items-center">
-                            <View className="w-12 h-12 bg-nxtcure-info/10 rounded-2xl items-center justify-center mr-5">
-                                <MapPin size={26} color="#45AAF2" />
-                            </View>
-                            <View className="flex-1">
-                                <Text className="text-white font-black text-lg mb-1">{app.title}</Text>
-                                <View className="flex-row items-center mt-1">
-                                    <User size={12} color="rgba(255,255,255,0.5)" />
-                                    <Text className="text-white/50 text-[10px] font-bold ml-1 uppercase">{app.doctor}</Text>
-                                    <View className="w-1 h-1 bg-white/10 rounded-full mx-2" />
-                                    <Clock size={12} color="rgba(255,255,255,0.5)" />
-                                    <Text className="text-white/50 text-[10px] font-bold ml-1 uppercase">{new Date(app.date).toLocaleDateString()}</Text>
-                                </View>
-                            </View>
-                            <Pressable onPress={() => removeAppointment(app.id)} className="p-3 bg-red-500/10 rounded-xl">
-                                <Trash2 size={20} color="#FF4757" opacity={0.8} />
-                            </Pressable>
-                        </Card>
-                    )) : (
-                        <View className="bg-white/5 border border-dashed border-white/10 p-8 rounded-[32px] items-center">
-                            <Text className="text-white/30 text-xs font-bold uppercase tracking-widest">No Active Bookings</Text>
-                        </View>
-                    )}
-                </Animated.View>
+                {/* Protocol Card Highlight */}
+                {sections.map((section, sIdx) => (
+                    section.data.length > 0 && (
+                        <Animated.View key={section.title} entering={FadeInDown.delay(sIdx * 200)} className="mb-8">
+                            <Text className="text-white/40 text-[10px] font-black uppercase tracking-[4px] ml-2 mb-4">{section.title}</Text>
+                            {section.data.map((item, iIdx) => (
+                                <Card key={item.id} className={`mb-4 bg-white/5 border-white/10 p-6 rounded-[32px] ${item.overdue ? 'border-l-4 border-l-red-500' : ''}`}>
+                                    <View className="flex-row items-center justify-between mb-4">
+                                        <View className="flex-row items-center flex-1">
+                                            <View style={{ backgroundColor: `${item.color}20` }} className="w-12 h-12 rounded-2xl items-center justify-center mr-4">
+                                                <item.icon size={22} color={item.color} />
+                                            </View>
+                                            <View className="flex-1">
+                                                <View className="flex-row items-center">
+                                                    {item.overdue && <AlertCircle size={14} color="#FF4757" className="mr-1.5" />}
+                                                    <Text className={`text-white font-black text-lg ${item.overdue ? 'text-red-400' : ''}`}>{item.title}</Text>
+                                                </View>
+                                                {item.lastDoneText ? (
+                                                    <Text className="text-white/40 text-[10px] font-bold uppercase tracking-widest mt-0.5">Last Done: {item.lastDoneText}</Text>
+                                                ) : item.isRecommended ? (
+                                                    <Text className="text-white/40 text-[10px] font-bold uppercase tracking-widest mt-0.5">Initial Protocol Due</Text>
+                                                ) : (
+                                                    <Text className="text-white/30 text-[10px] font-bold uppercase tracking-widest mt-0.5">Starts age {item.ageStart}</Text>
+                                                )}
+                                            </View>
+                                        </View>
+                                    </View>
 
-                {/* Screenings Section */}
-                <Animated.View entering={FadeInDown.duration(800).delay(200)} className="mb-10">
-                    <Text className="text-white/60 text-[10px] font-black uppercase tracking-[4px] ml-2 mb-4">Protocol Schedule</Text>
-                    {screeningItems.map(item => (
-                        <Card key={item.id} className={`mb-4 bg-white/5 border-white/10 p-6 flex-row items-center ${item.urgent ? 'border-l-4 border-l-red-500 bg-red-500/5' : ''}`}>
-                            <View className={`w-12 h-12 rounded-2xl items-center justify-center mr-5 ${item.urgent ? 'bg-red-500/10' : 'bg-white/5'}`}>
-                                <item.icon size={24} color={item.urgent ? '#FF4757' : 'rgba(255,255,255,0.5)'} />
-                            </View>
-                            <View className="flex-1">
-                                <Text className="text-white font-black text-lg mb-0.5">{item.title}</Text>
-                                <Text className={`${item.urgent ? 'text-red-400 font-black' : 'text-white/40 font-bold'} text-[10px] uppercase tracking-widest`}>{item.status}</Text>
-                            </View>
-                            {item.urgent && (
-                                <Link href={item.route as any} asChild>
-                                    <Pressable className="bg-red-500 px-5 py-2.5 rounded-xl shadow-lg shadow-red-500/20">
-                                        <Text className="text-white font-black text-[11px] uppercase tracking-wider">Log Now</Text>
-                                    </Pressable>
-                                </Link>
-                            )}
-                        </Card>
-                    ))}
-                </Animated.View>
+                                    {item.isRecommended ? (
+                                        <View className="flex-row gap-3">
+                                            <Pressable
+                                                onPress={() => {
+                                                    const routeMap: Record<string, string> = {
+                                                        testicular: '/learn/self-exam-tse',
+                                                        breast_self: '/learn/self-exam-breast',
+                                                        skin: '/learn/self-exam-skin',
+                                                        dental: '/learn/self-exam-oral'
+                                                    };
+                                                    const route = routeMap[item.id] || '/learn';
+                                                    router.push(route as any);
+                                                }}
+                                                className="flex-1 bg-nxtcure-primary/10 border border-nxtcure-primary/30 py-3.5 rounded-2xl items-center flex-row justify-center"
+                                            >
+                                                <CheckCircle2 size={16} color="#1DD1A1" className="mr-2" />
+                                                <Text className="text-white font-black text-[10px] uppercase tracking-widest">Mark Done</Text>
+                                            </Pressable>
 
-                <Animated.View entering={FadeInDown.duration(800).delay(400)} className="bg-nxtcure-primary/5 p-8 rounded-[40px] border border-nxtcure-primary/10 mb-10">
-                    <View className="flex-row items-center mb-4">
-                        <CheckCircle2 size={18} color="#1DD1A1" />
-                        <Text className="ml-3 font-black text-white text-sm uppercase tracking-widest">Protocol Intelligence</Text>
-                    </View>
-                    <Text className="text-white/40 text-[11px] leading-5 font-bold">
-                        Schedule based on Human Baseline parameters: Age ({factors.age}), Sex ({factors.sex}). System synchronizes new screening directives automatically per clinical guidelines.
+                                            {item.videoUrl && (
+                                                <Pressable className="bg-white/5 border border-white/10 px-5 rounded-2xl items-center justify-center">
+                                                    <Video size={18} color="white" opacity={0.6} />
+                                                </Pressable>
+                                            )}
+
+                                            <Pressable className="bg-white/5 border border-white/10 py-3.5 px-6 rounded-2xl items-center justify-center">
+                                                <ChevronRight size={16} color="white" opacity={0.4} />
+                                            </Pressable>
+                                        </View>
+                                    ) : (
+                                        <View className="bg-white/5 p-4 rounded-2xl">
+                                            <Text className="text-white/20 text-[10px] font-bold leading-4">
+                                                Standard guideline for {factors.sex} patients at age {item.ageStart}. Clinical surveillance not required currently.
+                                            </Text>
+                                        </View>
+                                    )}
+
+                                    {item.status === 'Actionable' && (
+                                        <View className="mt-4 flex-row items-center ml-1">
+                                            <Clock size={12} color="rgba(255,255,255,0.4)" className="mr-2" />
+                                            <Text className="text-white/40 text-[10px] font-bold">{item.nextDateText}</Text>
+                                        </View>
+                                    )}
+                                </Card>
+                            ))}
+                        </Animated.View>
+                    )
+                ))}
+
+                {/* Clinical Note */}
+                <Animated.View entering={FadeInDown.delay(800)} className="bg-white/5 p-8 rounded-[40px] border border-white/10 items-center">
+                    <ShieldCheck size={32} color="#1DD1A1" opacity={0.6} className="mb-4" />
+                    <Text className="text-white font-black text-center text-lg mb-2">Validated Guidelines</Text>
+                    <Text className="text-white/40 text-center text-xs leading-5">
+                        Recommendations are based on ACS and USPSTF clinical data. High-risk profiles should consult with their primary oncologist.
                     </Text>
                 </Animated.View>
             </ScrollView>
-
-            {/* Modal */}
-            <Modal transparent visible={modalVisible} animationType="fade">
-                <View style={styles.modalOverlay}>
-                    <View className="bg-[#1A1A2E] w-[85%] rounded-[40px] p-8 border border-white/10">
-                        <Text className="text-white text-2xl font-black mb-2">New Appointment</Text>
-                        <Text className="text-white/40 text-[10px] font-black uppercase tracking-widest mb-6">Clinical Slot Reservation</Text>
-
-                        <TextInput
-                            value={title}
-                            onChangeText={setTitle}
-                            placeholder="Appointment Title"
-                            placeholderTextColor="rgba(255,255,255,0.2)"
-                            className="bg-white/5 border border-white/10 rounded-2xl p-4 text-white mb-4"
-                        />
-
-                        <TextInput
-                            value={doctor}
-                            onChangeText={setDoctor}
-                            placeholder="Doctor Name"
-                            placeholderTextColor="rgba(255,255,255,0.2)"
-                            className="bg-white/5 border border-white/10 rounded-2xl p-4 text-white mb-4"
-                        />
-
-                        <TextInput
-                            value={date}
-                            onChangeText={setDate}
-                            placeholder="Date (YYYY-MM-DD)"
-                            placeholderTextColor="rgba(255,255,255,0.2)"
-                            className="bg-white/5 border border-white/10 rounded-2xl p-4 text-white mb-8"
-                        />
-
-                        <View className="flex-row gap-4">
-                            <Pressable
-                                onPress={() => setModalVisible(false)}
-                                className="flex-1 py-4 items-center"
-                            >
-                                <Text className="text-white/40 font-bold">Cancel</Text>
-                            </Pressable>
-                            <Pressable
-                                onPress={handleAddAppointment}
-                                className="flex-2 bg-nxtcure-primary py-4 rounded-2xl items-center px-8 shadow-lg shadow-nxtcure-primary/20"
-                            >
-                                <Text className="text-black font-black uppercase tracking-widest">Reserve Slot</Text>
-                            </Pressable>
-                        </View>
-                    </View>
-                </View>
-            </Modal>
-
-            <LinearGradient
-                colors={['transparent', 'black']}
-                style={styles.bottomFade}
-            />
         </ScreenContainer>
     );
 }
-
-const styles = StyleSheet.create({
-    bgContainer: {
-        position: 'absolute',
-        top: 0,
-        left: 0,
-        right: 0,
-        height: height,
-        zIndex: -1,
-    },
-    bgImage: {
-        width: '100%',
-        height: '100%',
-        opacity: 0.6,
-    },
-    bottomFade: {
-        position: 'absolute',
-        bottom: 0,
-        left: 0,
-        right: 0,
-        height: 120,
-        pointerEvents: 'none',
-        zIndex: 10,
-    },
-    modalOverlay: {
-        flex: 1,
-        backgroundColor: 'rgba(0,0,0,0.85)',
-        justifyContent: 'center',
-        alignItems: 'center',
-    }
-});

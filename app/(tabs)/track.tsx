@@ -1,6 +1,6 @@
 import React, { useMemo, useState } from 'react';
 import { View, Text, ScrollView, Pressable, Image, StyleSheet, Dimensions, Modal, TextInput } from 'react-native';
-import { Check, Info, AlertCircle, CigaretteOff, WineOff, Sun, Activity as ExerciseIcon, ShieldCheck, ChevronLeft, Fingerprint, Plus, Activity, Microscope, Zap, BarChart3, Scale, Dumbbell, FileText } from 'lucide-react-native';
+import { Check, Info, AlertCircle, CigaretteOff, WineOff, Sun, Activity as ExerciseIcon, ShieldCheck, ChevronLeft, Fingerprint, Plus, Activity, Microscope, Zap, BarChart3, Scale, Dumbbell, FileText, UserCheck, Shield, Search } from 'lucide-react-native';
 import { ScreenContainer } from '../../src/components/ui/ScreenContainer';
 import { useDietStore, DailyLog } from '../../src/store/dietStore';
 import { useLifestyleStore } from '../../src/store/lifestyleStore';
@@ -193,6 +193,64 @@ export default function TrackScreen() {
                             <Text className="text-white font-bold text-center text-xs">Weekly Report</Text>
                         </Pressable>
                     </View>
+                </Animated.View>
+
+                {/* Early Detection Hub (The Killer Feature) */}
+                <Animated.View entering={FadeInDown.delay(50).duration(800)} className="mb-10">
+                    <View className="flex-row items-center justify-between mb-4 px-2">
+                        <Text className="text-white/60 text-[10px] font-black uppercase tracking-[4px]">Self-Examination Hub</Text>
+                        <ShieldCheck size={14} color="#1DD1A1" opacity={0.6} />
+                    </View>
+
+                    <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={{ paddingHorizontal: 2 }}>
+                        {factors.sex === 'male' && (
+                            <Pressable
+                                onPress={() => router.push('/learn/self-exam-tse')}
+                                className="bg-white/5 border border-white/10 p-5 rounded-[28px] mr-4 w-40"
+                            >
+                                <View className="w-10 h-10 bg-nxtcure-primary/10 rounded-xl items-center justify-center mb-3">
+                                    <UserCheck size={20} color="#1DD1A1" />
+                                </View>
+                                <Text className="text-white font-black text-xs">Testicular</Text>
+                                <Text className="text-white/30 text-[8px] font-bold uppercase mt-1">Monthly Check</Text>
+                            </Pressable>
+                        )}
+
+                        {factors.sex === 'female' && (
+                            <Pressable
+                                onPress={() => router.push('/learn/self-exam-breast')}
+                                className="bg-white/5 border border-white/10 p-5 rounded-[28px] mr-4 w-40"
+                            >
+                                <View className="w-10 h-10 bg-[#A55EEA]/10 rounded-xl items-center justify-center mb-3">
+                                    <Shield size={20} color="#A55EEA" />
+                                </View>
+                                <Text className="text-white font-black text-xs">Breast</Text>
+                                <Text className="text-white/30 text-[8px] font-bold uppercase mt-1">Monthly Check</Text>
+                            </Pressable>
+                        )}
+
+                        <Pressable
+                            onPress={() => router.push('/learn/self-exam-skin')}
+                            className="bg-white/5 border border-white/10 p-5 rounded-[28px] mr-4 w-40"
+                        >
+                            <View className="w-10 h-10 bg-blue-500/10 rounded-xl items-center justify-center mb-3">
+                                <Zap size={20} color="#45AAF2" />
+                            </View>
+                            <Text className="text-white font-black text-xs">Skin Exam</Text>
+                            <Text className="text-white/30 text-[8px] font-bold uppercase mt-1">ABCDE Tracker</Text>
+                        </Pressable>
+
+                        <Pressable
+                            onPress={() => router.push('/learn/self-exam-oral')}
+                            className="bg-white/5 border border-white/10 p-5 rounded-[28px] w-40"
+                        >
+                            <View className="w-10 h-10 bg-yellow-500/10 rounded-xl items-center justify-center mb-3">
+                                <Search size={20} color="#F7B731" />
+                            </View>
+                            <Text className="text-white font-black text-xs">Oral Scan</Text>
+                            <Text className="text-white/30 text-[8px] font-bold uppercase mt-1">Check Gums/Lips</Text>
+                        </Pressable>
+                    </ScrollView>
                 </Animated.View>
 
                 {/* Lifestyle Risk Reduction Section */}
