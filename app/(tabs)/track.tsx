@@ -1,6 +1,6 @@
 import React, { useMemo, useState } from 'react';
 import { View, Text, ScrollView, Pressable, Image, StyleSheet, Dimensions, Modal, TextInput } from 'react-native';
-import { Check, Info, AlertCircle, CigaretteOff, WineOff, Sun, Activity as ExerciseIcon, ShieldCheck, ChevronLeft, Fingerprint, Plus, Activity, Microscope, Zap, BarChart3, Scale, Dumbbell } from 'lucide-react-native';
+import { Check, Info, AlertCircle, CigaretteOff, WineOff, Sun, Activity as ExerciseIcon, ShieldCheck, ChevronLeft, Fingerprint, Plus, Activity, Microscope, Zap, BarChart3, Scale, Dumbbell, FileText } from 'lucide-react-native';
 import { ScreenContainer } from '../../src/components/ui/ScreenContainer';
 import { useDietStore, DailyLog } from '../../src/store/dietStore';
 import { useLifestyleStore } from '../../src/store/lifestyleStore';
@@ -80,7 +80,7 @@ export default function TrackScreen() {
     const today = new Date().toISOString().split('T')[0];
     const { logs: dietLogs, toggleItem, getScore: getDietScore } = useDietStore();
     const { logs: lifestyleLogs, toggleHabit, setExercise, getConsistencyScore } = useLifestyleStore();
-    const { calculateRisk } = useRiskStore();
+    const { factors, calculateGlobalPreventionScore } = useRiskStore();
     const { addLog: addSymptomLog } = useSymptomStore();
     const router = useRouter();
 
@@ -99,7 +99,7 @@ export default function TrackScreen() {
 
     const dietScore = getDietScore(today);
     const lifestyleScore = getConsistencyScore(today);
-    const { score: totalPreventionScore } = calculateRisk(dietScore, lifestyleScore);
+    const { score: totalPreventionScore } = calculateGlobalPreventionScore(dietScore, lifestyleScore);
 
     const handleSymptomSubmit = () => {
         if (symptomText.trim()) {
@@ -324,6 +324,25 @@ export default function TrackScreen() {
                                 </Pressable>
                             );
                         })}
+                        {/* Risk Assessment (Full Width) */}
+                        <Pressable
+                            onPress={() => router.push('/risk/questionnaire')}
+                            style={styles.glassCard}
+                            className="w-full p-6 flex-row items-center border-white/10 active:opacity-80"
+                        >
+                            <View className="w-14 h-14 bg-blue-500/10 rounded-2xl items-center justify-center mr-5">
+                                <FileText size={26} color="#45AAF2" />
+                            </View>
+                            <View className="flex-1">
+                                <Text className="text-white font-black text-lg">Risk Assessment</Text>
+                                <Text className="text-white/40 text-[10px] font-black uppercase tracking-widest mt-1">
+                                    AI-powered clinical modeling
+                                </Text>
+                            </View>
+                            <View className="bg-white/5 px-4 py-2 rounded-xl border border-white/10">
+                                <Text className="text-white font-black text-[10px] uppercase tracking-widest">Analyze</Text>
+                            </View>
+                        </Pressable>
                     </View>
                 </Animated.View>
             </ScrollView>

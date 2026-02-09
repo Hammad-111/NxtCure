@@ -118,7 +118,7 @@ function ProtocolCard({ title, subtitle, icon: Icon, color, onPress }: any) {
 
 export default function HomeScreen() {
     const today = new Date().toISOString().split('T')[0];
-    const { factors, calculateRisk } = useRiskStore();
+    const { factors, calculateGlobalPreventionScore } = useRiskStore();
     const { getScore: getDietScore } = useDietStore();
     const { logs: lifestyleLogs, getConsistencyScore } = useLifestyleStore();
     const { hasGoal } = useGoalStore();
@@ -129,7 +129,7 @@ export default function HomeScreen() {
     const dietScore = getDietScore(today);
     const lifestyleScore = getConsistencyScore(today);
     const currentLifestyle = lifestyleLogs[today] || { exerciseMinutes: 0 };
-    const { level: riskLevel, score: preventionScore } = calculateRisk(dietScore, lifestyleScore);
+    const { level: riskLevel, score: preventionScore } = calculateGlobalPreventionScore(dietScore, lifestyleScore);
 
     const { avoided, total } = getAvoidanceStats();
     const carcinogenScore = Math.round((avoided / total) * 100);
@@ -261,19 +261,22 @@ export default function HomeScreen() {
 
                 <View className="h-[1px] bg-white/10 mx-6 mb-8" />
 
-                {/* 2. Upcoming Section */}
+                {/* 2. Prevention Score Card */}
                 <Animated.View entering={FadeInDown.delay(600).duration(800)} className="px-6 mb-8">
-                    <Text className="text-white/40 text-[10px] font-black uppercase tracking-[4px] mb-4">Upcoming</Text>
-                    <View className="gap-3">
-                        <View className="flex-row items-center">
-                            <View className="w-1.5 h-1.5 rounded-full bg-nxtcure-primary mr-3" />
-                            <Text className="text-white font-bold">Testicular self-exam (due today)</Text>
-                        </View>
-                        <View className="flex-row items-center">
-                            <View className="w-1.5 h-1.5 rounded-full bg-blue-400 mr-3" />
-                            <Text className="text-white font-bold">Dental cleaning (Feb 15)</Text>
-                        </View>
-                    </View>
+                    <Text className="text-white/40 text-[10px] font-black uppercase tracking-[4px] mb-4">Your Prevention Score</Text>
+                    <Pressable onPress={() => router.push('/risk/profile')} className="mb-10">
+                        <Card className="bg-white/5 border-white/10 p-6 rounded-[40px] shadow-2xl shadow-black">
+                            <View className="flex-row items-center justify-between mb-8">
+                                <View className="bg-nxtcure-primary/10 px-4 py-2 rounded-full border border-nxtcure-primary/30">
+                                    <Text className="text-nxtcure-primary font-black text-[10px] uppercase tracking-widest">{riskLevel}</Text>
+                                </View>
+                                <View className="flex-row items-center gap-1">
+                                    <Shield size={12} color="#1DD1A1" />
+                                    <Text className="text-white/40 text-[10px] font-black uppercase tracking-widest">Clinical Score</Text>
+                                </View>
+                            </View>
+                        </Card>
+                    </Pressable>
                 </Animated.View>
 
                 <View className="h-[1px] bg-white/10 mx-6 mb-8" />
