@@ -36,8 +36,8 @@ export default function CarcinogenDBScreen() {
     const categories = ['Lifestyle', 'Dietary', 'Occupational', 'Environmental', 'Infectious'] as const;
 
     return (
-        <ScreenContainer hasWave={false} darkStatus={false} withPadding={false} className="bg-black">
-            {/* Cinematic Background */}
+        <ScreenContainer hasWave={false} darkStatus={false} withPadding={false} fullScreen={true} className="bg-black">
+            {/* Header / Background Area */}
             <LinearGradient
                 colors={['#05353D', '#000000']}
                 style={StyleSheet.absoluteFill}

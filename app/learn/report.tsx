@@ -29,7 +29,7 @@ export default function ExposureReportScreen() {
     const preventionPercentage = Math.round((avoided / total) * 100);
 
     return (
-        <ScreenContainer hasWave={false} darkStatus={false} withPadding={false} className="bg-black">
+        <ScreenContainer hasWave={false} darkStatus={false} withPadding={false} fullScreen={true} className="bg-black">
             <LinearGradient
                 colors={['#0F3460', '#000000']}
                 style={StyleSheet.absoluteFill}

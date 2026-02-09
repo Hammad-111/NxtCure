@@ -77,7 +77,7 @@ export default function CarcinogenScannerScreen() {
     };
 
     return (
-        <ScreenContainer withPadding={false} className="bg-black">
+        <ScreenContainer withPadding={false} fullScreen={true} className="bg-black">
             <CameraView
                 style={StyleSheet.absoluteFill}
                 onBarcodeScanned={scanned ? undefined : handleBarcodeScanned}

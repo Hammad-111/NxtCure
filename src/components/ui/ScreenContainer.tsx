@@ -9,6 +9,7 @@ interface ScreenContainerProps extends ViewProps {
     withPadding?: boolean;
     hasWave?: boolean;
     waveVariant?: WaveVariant;
+    fullScreen?: boolean;
 }
 
 export function ScreenContainer({
@@ -17,11 +18,16 @@ export function ScreenContainer({
     withPadding = true,
     hasWave = false,
     waveVariant = 'hero',
+    fullScreen = false,
     className,
     ...props
 }: ScreenContainerProps) {
     return (
-        <SafeAreaView className={`flex-1 ${hasWave ? 'bg-white' : 'bg-nxtcure-bg'} ${className}`} edges={['top', 'left', 'right']} {...props}>
+        <SafeAreaView
+            className={`flex-1 ${hasWave ? 'bg-white' : 'bg-nxtcure-bg'} ${className}`}
+            edges={fullScreen ? [] : ['top', 'left', 'right']}
+            {...props}
+        >
             <StatusBar style={darkStatus ? 'dark' : 'light'} />
             {hasWave && <MedicalBackground variant={waveVariant} />}
             <View className={`flex-1 ${withPadding ? 'px-6' : ''}`}>

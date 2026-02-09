@@ -34,8 +34,8 @@ export default function CarcinogenDetailScreen() {
     };
 
     return (
-        <ScreenContainer hasWave={false} darkStatus={false} withPadding={false} className="bg-black">
-            {/* Header / Background Area */}
+        <ScreenContainer hasWave={false} darkStatus={false} withPadding={false} fullScreen={true} className="bg-black">
+            {/* Header / Background Area slice */}
             <View className="h-48 relative overflow-hidden">
                 <LinearGradient
                     colors={['#0F3460', '#000000']}
